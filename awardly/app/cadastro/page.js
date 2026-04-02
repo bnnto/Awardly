@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import Parse from "@/lib/Parse";
+import Parse from '@/lib/parseClient';
 import { useRouter } from "next/navigation";
 import styles from "./cadastro.module.css";
 import DarkVeil from "../components/DarkVeil";
