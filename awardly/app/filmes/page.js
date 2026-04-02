@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import { useFilmes } from '../../hooks/useFilmes';
-import FilmeCard from '../components/FilmeCard';
+import FilmeCard from '@/app/components/FilmeCard';
 import '../../styles/filmes.css';
 
 const ANOS = [2023, 2024, 2025, 2026];
