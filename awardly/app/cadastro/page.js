@@ -3,7 +3,7 @@
 import { useState } from "react";
 import Parse from '@/lib/parseClient';
 import { useRouter } from "next/navigation";
-import styles from "./cadastro.module.css";
+import styles from "@/styles/cadastro.module.css";
 import DarkVeil from "../components/DarkVeil";
 
 export default function Cadastro() {

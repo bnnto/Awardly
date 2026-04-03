@@ -3,7 +3,7 @@
 import { useState } from "react";
 import Parse from '@/lib/parseClient';
 import { useRouter } from "next/navigation";
-import styles from "./login.module.css";
+import styles from "@/styles/login.module.css";
 import DarkVeil from "../components/DarkVeil";
 
 export default function Login() {
