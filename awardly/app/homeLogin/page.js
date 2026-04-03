@@ -40,19 +40,22 @@ function CardFilme({ filme, vencedor, indice }) {
         <img
           src={getImageURL(filme.poster_path, "w500")}
           alt={filme.title}
+          className={styles.posterFilme}   
           loading={indice < 5 ? "eager" : "lazy"}
-          style={{ width: "100%", height: "100%", objectFit: "cover" }}
         />
       ) : (
         <div className={styles.esqueleto} />
       )}
  
       {vencedor && (
-        <img
-          src="/oscar2.png"
-          alt="Vencedor"
-          className={styles.iconeOscar}
-        />
+        <div className={styles.wrapperOscar}>
+          <span className={styles.textoVencedor}>VENCEDOR</span>
+          <img
+            src="/oscar2.png"
+            alt="Vencedor"
+            className={styles.iconeOscar}
+          />
+        </div>
       )}
  
       <div className={styles.sobreposicaoFilme}>

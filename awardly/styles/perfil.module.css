@@ -1,0 +1,616 @@
+/* ===================== LAYOUT ===================== */
+
+.principal {
+  padding: 0;
+  max-width: 100%;
+  margin: 0;
+  min-height: 100vh;
+  background: var(--bg);
+}
+
+.conteudo {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 40px 48px;
+  display: grid;
+  grid-template-columns: 1fr 320px;
+  gap: 40px;
+  align-items: start;
+}
+
+.conteudoFull {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 40px 48px;
+}
+
+.colunaEsq {
+  display: flex;
+  flex-direction: column;
+  gap: 48px;
+}
+
+.sidebar {
+  display: flex;
+  flex-direction: column;
+  gap: 40px;
+  position: sticky;
+  top: 24px;
+}
+
+/* ===================== BANNER + HEADER ===================== */
+
+.bannerWrap {
+  position: relative;
+  margin-bottom: 0;
+}
+
+.banner {
+  width: 100%;
+  height: 180px;
+  background: linear-gradient(135deg, #1a1610 0%, #2a2118 40%, #1a1610 100%);
+  border-bottom: 1px solid var(--border);
+  position: relative;
+  overflow: hidden;
+}
+
+.banner::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: repeating-linear-gradient(
+    45deg,
+    transparent,
+    transparent 60px,
+    rgba(201, 168, 76, 0.03) 60px,
+    rgba(201, 168, 76, 0.03) 61px
+  );
+}
+
+.headerPerfil {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 0 48px;
+  display: flex;
+  align-items: flex-end;
+  gap: 24px;
+  transform: translateY(-40px);
+}
+
+.avatarWrap {
+  flex-shrink: 0;
+}
+
+.avatar {
+  width: 100px;
+  height: 100px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 3px solid var(--gold);
+  box-shadow: 0 0 24px rgba(201, 168, 76, 0.3);
+}
+
+.avatarPlaceholder {
+  width: 100px;
+  height: 100px;
+  border-radius: 50%;
+  background: var(--card-bg);
+  border: 3px solid var(--gold);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 38px;
+  font-weight: 600;
+  color: var(--gold);
+  box-shadow: 0 0 24px rgba(201, 168, 76, 0.2);
+}
+
+.headerInfo {
+  flex: 1;
+  padding-bottom: 8px;
+}
+
+.nomeUsuario {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 28px;
+  font-weight: 600;
+  color: var(--text);
+  letter-spacing: 0.01em;
+  margin-bottom: 4px;
+}
+
+.bioUsuario {
+  font-size: 13px;
+  color: rgba(255, 255, 255, 0.5);
+  line-height: 1.5;
+}
+
+.btnEditar {
+  flex-shrink: 0;
+  padding: 8px 20px;
+  border: 1px solid var(--gold);
+  border-radius: 2px;
+  background: transparent;
+  color: var(--gold);
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 13px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: background 0.2s ease, color 0.2s ease;
+  margin-bottom: 8px;
+}
+
+.btnEditar:hover {
+  background: var(--gold);
+  color: #0a0906;
+}
+
+/* ===================== ESTATÍSTICAS ===================== */
+
+.estatRow {
+  max-width: 1100px;
+  margin: -16px auto 0;
+  padding: 0 48px;
+  display: flex;
+  gap: 0;
+  border-bottom: 1px solid var(--border);
+}
+
+.estatCard {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 16px 12px;
+  border-right: 1px solid var(--border);
+  transition: background 0.2s ease;
+}
+
+.estatCard:last-child {
+  border-right: none;
+}
+
+.estatCard:hover {
+  background: rgba(201, 168, 76, 0.04);
+}
+
+.estatValor {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 24px;
+  font-weight: 600;
+  color: var(--gold);
+  line-height: 1;
+  margin-bottom: 4px;
+}
+
+.estatLabel {
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: rgba(255, 255, 255, 0.4);
+}
+
+/* ===================== TABS ===================== */
+
+.tabs {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 0 48px;
+  display: flex;
+  gap: 0;
+  border-bottom: 1px solid var(--border);
+  margin-bottom: 0;
+}
+
+.tab {
+  padding: 14px 24px;
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 15px;
+  font-weight: 400;
+  letter-spacing: 0.06em;
+  color: rgba(255, 255, 255, 0.45);
+  text-decoration: none;
+  border-bottom: 2px solid transparent;
+  transition: color 0.2s ease, border-color 0.2s ease;
+  margin-bottom: -1px;
+}
+
+.tab:hover {
+  color: var(--text);
+}
+
+.tabAtiva {
+  color: var(--gold);
+  border-bottom-color: var(--gold);
+}
+
+/* ===================== SEÇÕES ===================== */
+
+.secao {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.tituloSecao {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 18px;
+  font-weight: 300;
+  font-style: italic;
+  color: var(--text);
+  letter-spacing: 0.02em;
+}
+
+/* ===================== FILMES FAVORITOS ===================== */
+
+.gradeFilmesFav {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 10px;
+}
+
+.filmeFav {
+  position: relative;
+  aspect-ratio: 2 / 3;
+  border-radius: 3px;
+  overflow: hidden;
+  border: 1px solid var(--border);
+  cursor: pointer;
+  transition: border-color 0.2s ease, transform 0.2s ease;
+}
+
+.filmeFav:hover {
+  border-color: var(--gold);
+  transform: translateY(-3px);
+}
+
+.filmeFavImg {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: filter 0.3s ease;
+}
+
+.filmeFav:hover .filmeFavImg {
+  filter: brightness(0.6);
+}
+
+.filmeFavOverlay {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  padding: 32px 10px 10px;
+  background: linear-gradient(to top, rgba(0,0,0,0.95) 0%, transparent 100%);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.filmeFav:hover .filmeFavOverlay {
+  opacity: 1;
+}
+
+.filmeFavTitulo {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 12px;
+  font-weight: 600;
+  color: #fff;
+  line-height: 1.3;
+}
+
+/* ===================== GRADE FILMES AVALIADOS ===================== */
+
+.gradeFilmesAval {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 14px;
+}
+
+.cardFilmeAval {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.cardFilmeAvalImg {
+  position: relative;
+  aspect-ratio: 2 / 3;
+  border-radius: 3px;
+  overflow: hidden;
+  border: 1px solid var(--border);
+  transition: border-color 0.2s ease;
+}
+
+.cardFilmeAvalImg:hover {
+  border-color: var(--gold);
+}
+
+.cardFilmeAvalImg img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.cardFilmeNota {
+  position: absolute;
+  bottom: 8px;
+  right: 8px;
+  background: rgba(10, 9, 6, 0.9);
+  border: 1px solid var(--gold);
+  color: var(--gold);
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 13px;
+  font-weight: 600;
+  padding: 2px 7px;
+  border-radius: 2px;
+}
+
+.cardFilmeAvalInfo {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.cardFilmeAvalTitulo {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text);
+  line-height: 1.3;
+}
+
+.cardFilmeAvalAno {
+  font-size: 11px;
+  color: var(--gold);
+  letter-spacing: 0.06em;
+}
+
+.cardFilmeAvalEsq {
+  aspect-ratio: 2 / 3;
+  border-radius: 3px;
+  background: var(--card-bg);
+  border: 1px solid var(--border);
+  animation: esqPulse 1.8s infinite;
+}
+
+/* ===================== REVIEWS ===================== */
+
+.listaReviews {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.reviewCard {
+  display: flex;
+  gap: 16px;
+  padding: 16px;
+  background: var(--card-bg);
+  border: 1px solid var(--border);
+  border-radius: 3px;
+  transition: border-color 0.2s ease;
+}
+
+.reviewCard:hover {
+  border-color: rgba(201, 168, 76, 0.4);
+}
+
+.reviewPoster {
+  width: 56px;
+  flex-shrink: 0;
+  aspect-ratio: 2/3;
+  object-fit: cover;
+  border-radius: 2px;
+}
+
+.reviewBody {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  flex: 1;
+}
+
+.reviewHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.reviewFilme {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--text);
+}
+
+.reviewNota {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--gold);
+  background: rgba(201, 168, 76, 0.08);
+  border: 1px solid rgba(201, 168, 76, 0.3);
+  padding: 1px 8px;
+  border-radius: 2px;
+}
+
+.reviewCategoria {
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: rgba(255, 255, 255, 0.35);
+}
+
+.reviewTexto {
+  font-size: 13px;
+  color: rgba(255, 255, 255, 0.6);
+  line-height: 1.6;
+  margin-top: 2px;
+}
+
+.reviewData {
+  font-size: 11px;
+  color: rgba(255, 255, 255, 0.25);
+  margin-top: 4px;
+}
+
+.reviewCardEsq {
+  height: 100px;
+  border-radius: 3px;
+  background: var(--card-bg);
+  border: 1px solid var(--border);
+  animation: esqPulse 1.8s infinite;
+}
+
+/* ===================== ATIVIDADE ===================== */
+
+.listaAtividade {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
+.atividadeItem {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 12px 0;
+  border-bottom: 1px solid var(--border);
+}
+
+.atividadeItem:last-child {
+  border-bottom: none;
+}
+
+.atividadeIcone {
+  font-size: 16px;
+  flex-shrink: 0;
+  width: 28px;
+  height: 28px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--card-bg);
+  border: 1px solid var(--border);
+  border-radius: 50%;
+}
+
+.atividadeInfo {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  flex: 1;
+}
+
+.atividadeTexto {
+  font-size: 12px;
+  color: rgba(255, 255, 255, 0.6);
+  line-height: 1.5;
+}
+
+.atividadeData {
+  font-size: 11px;
+  color: rgba(255, 255, 255, 0.25);
+}
+
+.btnRemoverWatch {
+  position: absolute;
+  top: 6px;
+  right: 6px;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background: rgba(10, 9, 6, 0.85);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  color: rgba(255, 255, 255, 0.7);
+  font-size: 10px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  transition: opacity 0.2s ease, background 0.2s ease;
+}
+
+.cardFilmeAvalImg:hover .btnRemoverWatch {
+  opacity: 1;
+}
+
+.btnRemoverWatch:hover {
+  background: rgba(180, 60, 60, 0.9);
+  border-color: transparent;
+  color: #fff;
+}
+
+.vazio {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 16px;
+  font-style: italic;
+  color: rgba(255, 255, 255, 0.3);
+  text-align: center;
+  padding: 60px 0;
+}
+
+.esqueletoPage {
+  width: 100%;
+  height: 400px;
+}
+
+@keyframes esqPulse {
+  0%, 100% { opacity: 0.4; }
+  50% { opacity: 0.7; }
+}
+
+@media (max-width: 900px) {
+  .conteudo {
+    grid-template-columns: 1fr;
+    padding: 32px 24px;
+  }
+
+  .conteudoFull {
+    padding: 32px 24px;
+  }
+
+  .headerPerfil {
+    padding: 0 24px;
+    flex-wrap: wrap;
+  }
+
+  .estatRow {
+    padding: 0 24px;
+    flex-wrap: wrap;
+  }
+
+  .tabs {
+    padding: 0 24px;
+    overflow-x: auto;
+  }
+
+  .gradeFilmesFav {
+    grid-template-columns: repeat(4, 1fr);
+  }
+
+  .gradeFilmesAval {
+    grid-template-columns: repeat(3, 1fr);
+  }
+
+  .sidebar {
+    position: static;
+  }
+}
+
+@media (max-width: 560px) {
+  .gradeFilmesFav {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .gradeFilmesAval {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .nomeUsuario {
+    font-size: 22px;
+  }
+}
