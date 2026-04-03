@@ -7,24 +7,13 @@ export default function FilmeCard({ filme }) {
 
   return (
     <div
-      className="filme-card"
+      className="cardFilme"
       onClick={() => router.push(`/filmes/${filme.tmdbId}`)}
     >
-      <div className="filme-card-poster">
-        <img src={filme.poster} alt={filme.titulo} loading="lazy" />
-        {filme.vencedor && (
-          <span className="badge-vencedor">🏆 Vencedor</span>
-        )}
-      </div>
-      <div className="filme-card-info">
-        <h3>{filme.titulo}</h3>
-        <span className="filme-ano">{filme.anoLancamento}</span>
-        <span className="filme-nota">⭐ {filme.nota}</span>
-        <div className="filme-categorias">
-          {filme.categorias.slice(0, 2).map((cat) => (
-            <span key={cat} className="tag-categoria">{cat}</span>
-          ))}
-        </div>
+      <img src={filme.poster} alt={filme.titulo} className="posterFilme" loading="lazy" />
+      <div className="sobreposicaoFilme">
+        <p className="tituloFilme">{filme.titulo}</p>
+        <p className="anoFilme">{filme.anoLancamento}</p>
       </div>
     </div>
   );

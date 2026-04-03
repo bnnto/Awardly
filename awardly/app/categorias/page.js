@@ -3,7 +3,7 @@
 import { useState } from 'react';
 import { useFilmes } from '../../hooks/useFilmes';
 import FilmeCard from '@/app/components/FilmeCard';
-import '../../styles/categorias.css';
+import '@/styles/categorias.css';
 
 const ANOS = [2023, 2024, 2025, 2026];
 
@@ -21,20 +21,13 @@ export default function Categorias() {
 
   return (
     <div className="categorias-container">
-      <h1>Categorias do Oscar</h1>
+      <h1 className="categorias-titulo">Categorias do Oscar</h1>
 
       <div className="filtros">
-        <button
-          className={anoSelecionado === null ? 'ativo' : ''}
-          onClick={() => setAnoSelecionado(null)}
-        >
-          Todos
-        </button>
-
         {ANOS.map((ano) => (
           <button
             key={ano}
-            className={anoSelecionado === ano ? 'ativo' : ''}
+            className={`filtro-btn ${anoSelecionado === ano ? 'ativo' : ''}`}
             onClick={() => setAnoSelecionado(ano)}
           >
             {ano}
@@ -42,10 +35,16 @@ export default function Categorias() {
         ))}
       </div>
 
-      {loading && <p>Carregando...</p>}
-      {erro && <p className="erro">Erro: {erro}</p>}
+      {!anoSelecionado && (
+        <div className="selecione">
+          <p>Selecione o ano</p>
+        </div>
+      )}
 
-      {!loading && !erro && (
+      {loading && anoSelecionado && <p className="mensagem">Carregando...</p>}
+      {erro && <p className="mensagem erro">Erro: {erro}</p>}
+
+      {!loading && !erro && anoSelecionado && (
         <div className="categorias-lista">
           {Object.entries(categoriasAgrupadas).map(([nome, filmesCategoria]) => (
             <div key={nome} className="categoria-bloco">

@@ -37,7 +37,7 @@ export function useFilmes(ano = null) {
               nota:           detalhes.vote_average?.toFixed(1),
               duracao:        detalhes.runtime,
               categorias:     filme.get('categorias') || [],
-              vencedor:       filme.get('vencedor')   || false,
+              vencedores: filme.get('vencedores') || [],
             };
           })
         );
