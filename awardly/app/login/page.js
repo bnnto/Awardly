@@ -24,7 +24,7 @@ export default function Login() {
     try {
       await Parse.User.logIn(form.username, form.password);
       setMessage("Login realizado com sucesso!");
-      router.push("/menu");
+      router.push("/homeLogin");
     } catch (error) {
       setMessage(error.message);
     }

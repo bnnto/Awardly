@@ -1,0 +1,221 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap');
+
+.navbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0;                        
+  height: 68px;
+  background: #0a0906;
+  border-bottom: 1px solid var(--border);
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+
+.navbarInterna {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 48px;                
+}
+
+.logo {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  cursor: pointer;
+  user-select: none;
+}
+
+.logoImg {
+  width: 28px;
+  height: 28px;
+  object-fit: contain;
+}
+
+.logoNome {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 24px;
+  font-weight: 500;
+  letter-spacing: 0.04em;
+  color: var(--text);
+  transition: color 0.2s;
+}
+
+.logo:hover .logoNome {
+  color: var(--gold);
+}
+
+.direita {
+  display: flex;
+  align-items: center;
+  gap: 36px;
+}
+
+.linkNav {
+  font-family: 'Poppins', sans-serif;  
+  background: transparent;
+  border: none;
+  color: #aaa496;
+  font-size: 17px;
+  font-weight: 300;
+  font-style: italic;
+  letter-spacing: 0.04em;
+  cursor: pointer;
+  padding: 0;
+  transition: color 0.2s;
+}
+
+.linkNav:hover {
+  color: var(--gold);
+}
+
+.pesquisaWrapper {
+  display: flex;
+  align-items: center;
+}
+
+.pesquisaForm {
+  display: flex;
+  align-items: center;
+  gap: 0;
+  background: transparent;
+  border: 1px solid transparent;
+  border-radius: 6px;
+  overflow: hidden;
+  transition: border-color 0.25s ease, background 0.25s ease, width 0.3s ease;
+  width: 40px;
+}
+
+.pesquisaAberta {
+  border-color: var(--gold-dark);
+  background: var(--surface);
+  width: 200px;
+}
+
+.inputPesquisa {
+  background: transparent;
+  border: none;
+  color: var(--gold);
+  font-family: 'Poppins', sans-serif;
+  font-size: 14px;
+  outline: none;
+  width: 100%;
+  padding: 0 0 0 12px;
+  opacity: 0;
+  transition: opacity 0.2s ease;
+  pointer-events: none;
+}
+
+.pesquisaAberta .inputPesquisa {
+  opacity: 1;
+  pointer-events: all;
+}
+
+.inputPesquisa::placeholder {
+  color: var(--muted);
+}
+
+.botaoLupa {
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  padding: 6px 6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #aaa496;
+  transition: color 0.2s;
+  flex-shrink: 0;
+  width: 32px;
+  height: 32px;
+}
+
+.botaoLupa svg {
+  width: 17px;
+  height: 17px;
+}
+
+.botaoLupa:hover {
+  color: var(--gold);
+}
+
+.perfil {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+  transition: opacity 0.2s;
+}
+
+.perfil:hover {
+  opacity: 0.8;
+}
+
+.fotoPerfil {
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  border: 1px solid var(--border);
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--surface);
+  flex-shrink: 0;
+  transition: border-color 0.2s;
+}
+
+.perfil:hover .fotoPerfil {
+  border-color: var(--gold);
+}
+
+.fotoPerfil img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.fotoPerfil svg {
+  width: 18px;
+  height: 18px;
+  stroke: var(--muted);
+}
+
+.nomeUsuario {
+  font-family: 'Poppins', sans-serif;
+  font-size: 14px;
+  font-weight: 400;
+  color: #aaa496;
+  max-width: 120px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+@media (max-width: 768px) {
+  .navbar {
+    padding: 0 20px;
+  }
+
+  .direita {
+    gap: 20px;
+  }
+
+  .nomeUsuario {
+    display: none;
+  }
+}
+
+@media (max-width: 480px) {
+  .linkNav {
+    display: none;
+  }
+}
