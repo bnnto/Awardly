@@ -1,0 +1,240 @@
+/* ===================== BOTÕES SEGUIR ===================== */
+
+.btnSeguir {
+  flex-shrink: 0;
+  padding: 8px 24px;
+  border: 1px solid var(--gold);
+  border-radius: 2px;
+  background: var(--gold);
+  color: #0a0906;
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: background 0.2s ease, color 0.2s ease, opacity 0.2s ease;
+  margin-bottom: 8px;
+}
+
+.btnSeguir:hover {
+  background: transparent;
+  color: var(--gold);
+}
+
+.btnSeguir:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.btnSeguindo {
+  flex-shrink: 0;
+  padding: 8px 24px;
+  border: 1px solid rgba(201, 168, 76, 0.4);
+  border-radius: 2px;
+  background: transparent;
+  color: rgba(255, 255, 255, 0.5);
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 13px;
+  font-weight: 400;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: border-color 0.2s ease, color 0.2s ease;
+  margin-bottom: 8px;
+}
+
+.btnSeguindo:hover {
+  border-color: rgba(180, 60, 60, 0.6);
+  color: rgba(220, 100, 100, 0.8);
+}
+
+.btnSeguindo:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* ===================== ESTAT CLICÁVEL ===================== */
+
+.estatClicavel {
+  cursor: pointer;
+}
+
+.estatClicavel:hover {
+  background: rgba(201, 168, 76, 0.08) !important;
+}
+
+/* ===================== PÁGINA SEGUIDORES ===================== */
+
+.paginaSeguidores {
+  max-width: 680px;
+  margin: 0 auto;
+  padding: 40px 48px;
+}
+
+.cabecalhoSeguidores {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 32px;
+}
+
+.btnVoltarSeg {
+  background: none;
+  border: none;
+  color: rgba(255, 255, 255, 0.4);
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 14px;
+  letter-spacing: 0.06em;
+  cursor: pointer;
+  transition: color 0.2s ease;
+  padding: 0;
+}
+
+.btnVoltarSeg:hover {
+  color: var(--gold);
+}
+
+.tituloSeguidores {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 22px;
+  font-weight: 600;
+  color: var(--text);
+  letter-spacing: 0.01em;
+}
+
+/* ===================== ABAS ===================== */
+
+.abasSeguidores {
+  display: flex;
+  border-bottom: 1px solid var(--border);
+  margin-bottom: 24px;
+}
+
+.abaSeg {
+  padding: 12px 24px;
+  background: none;
+  border: none;
+  border-bottom: 2px solid transparent;
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 15px;
+  letter-spacing: 0.06em;
+  color: rgba(255, 255, 255, 0.4);
+  cursor: pointer;
+  margin-bottom: -1px;
+  transition: color 0.2s ease, border-color 0.2s ease;
+}
+
+.abaSeg:hover {
+  color: var(--text);
+}
+
+.abaSegAtiva {
+  color: var(--gold);
+  border-bottom-color: var(--gold);
+}
+
+/* ===================== LISTA DE USUÁRIOS ===================== */
+
+.listaUsuarios {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
+.cardUsuario {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px 0;
+  border-bottom: 1px solid var(--border);
+  gap: 16px;
+}
+
+.cardUsuario:last-child {
+  border-bottom: none;
+}
+
+.cardUsuarioInfo {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  flex: 1;
+  cursor: pointer;
+  min-width: 0;
+}
+
+.cardUsuarioAvatar {
+  flex-shrink: 0;
+}
+
+.cardUsuarioFoto {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid var(--border);
+  transition: border-color 0.2s ease;
+}
+
+.cardUsuarioInfo:hover .cardUsuarioFoto {
+  border-color: var(--gold);
+}
+
+.cardUsuarioAvatarPlaceholder {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  background: var(--card-bg);
+  border: 2px solid var(--border);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 20px;
+  font-weight: 600;
+  color: var(--gold);
+  transition: border-color 0.2s ease;
+}
+
+.cardUsuarioInfo:hover .cardUsuarioAvatarPlaceholder {
+  border-color: var(--gold);
+}
+
+.cardUsuarioTexto {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+
+.cardUsuarioNome {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--text);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.cardUsuarioUsername {
+  font-size: 12px;
+  color: rgba(255, 255, 255, 0.35);
+  letter-spacing: 0.04em;
+}
+
+.cardUsuarioBio {
+  font-size: 12px;
+  color: rgba(255, 255, 255, 0.4);
+  line-height: 1.4;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+@media (max-width: 600px) {
+  .paginaSeguidores {
+    padding: 32px 24px;
+  }
+}

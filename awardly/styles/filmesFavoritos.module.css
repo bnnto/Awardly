@@ -269,3 +269,8 @@
 .resultadoItem:hover .resultadoAdd {
   color: var(--gold);
 }
+
+.resultadoDesabilitado {
+  opacity: 0.4;
+  cursor: not-allowed;
+}

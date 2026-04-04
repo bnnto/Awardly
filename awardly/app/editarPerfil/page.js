@@ -5,6 +5,7 @@ import Parse from "@/lib/parseClient";
 import NavbarLogin from "../components/NavbarLogin";
 import FilmesFavoritos from "../components/FilmesFavoritos";
 import { useRouter } from "next/navigation";
+import { getFilme } from "@/lib/tmdb";
 import styles from "@/styles/editarPerfil.module.css";
 
 export default function EditarPerfil() {
@@ -42,16 +43,25 @@ export default function EditarPerfil() {
           const query = new Parse.Query(Filme);
           query.containedIn("tmdbId", tmdbIds);
           const resultados = await query.find();
-          const ordenados = tmdbIds
-            .map((id) => resultados.find((f) => f.get("tmdbId") === id))
-            .filter(Boolean)
-            .map((f) => ({
-              objectId: f.id,
-              tmdbId: f.get("tmdbId"),
-              nome: f.get("nome"),
-              ano: f.get("ano"),
-              poster_path: f.get("poster") || null,
-            }));
+          const ordenados = await Promise.all(
+            tmdbIds
+              .map((id) => resultados.find((f) => f.get("tmdbId") === id))
+              .filter(Boolean)
+              .map(async (f) => {
+                let poster_path = null;
+                try {
+                  const detalhes = await getFilme(f.get("tmdbId"));
+                  poster_path = detalhes?.poster_path || null;
+                } catch {}
+                return {
+                  objectId: f.id,
+                  tmdbId: f.get("tmdbId"),
+                  titulo: f.get("titulo"), 
+                  ano: f.get("ano"),
+                  poster_path,
+                };
+              })
+          );
           setFavoritos(ordenados);
         } catch (e) {
           console.error("Erro ao carregar favoritos:", e);
@@ -217,10 +227,10 @@ export default function EditarPerfil() {
                 onChange={handleChange}
                 placeholder="Fale um pouco sobre você..."
                 className={styles.textarea}
-                maxLength={160}
+                maxLength={100}
                 rows={3}
               />
-              <span className={styles.contador}>{form.bio.length}/160</span>
+              <span className={styles.contador}>{form.bio.length}/100</span>
             </div>
           </div>
 

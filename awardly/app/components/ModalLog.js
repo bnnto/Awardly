@@ -9,13 +9,13 @@ async function buscarFilmes(termo) {
   if (!termo.trim()) return [];
   const Filme = Parse.Object.extend("Filme");
   const query = new Parse.Query(Filme);
-  query.contains("nome", termo);
+  query.contains("titulo", termo);
   query.limit(8);
   const resultados = await query.find();
   return resultados.map((f) => ({
     objectId: f.id,
     tmdbId: f.get("tmdbId"),
-    nome: f.get("nome"),
+    titulo: f.get("titulo"),
     ano: f.get("ano"),
   }));
 }
@@ -140,7 +140,7 @@ function EtapaBusca({ onSelecionar }) {
         {resultados.map((filme) => (
           <div key={filme.objectId} className={styles.resultadoItem} onClick={() => onSelecionar(filme)}>
             <div className={styles.resultadoInfo}>
-              <span className={styles.resultadoNome}>{filme.nome}</span>
+              <span className={styles.resultadoNome}>{filme.titulo}</span>
               <span className={styles.resultadoAno}>{filme.ano}</span>
             </div>
             <span className={styles.resultadoSeta}>→</span>
@@ -162,12 +162,12 @@ function EtapaLog({ filme, detalhes, onSalvar, salvando, erro }) {
     <form onSubmit={(e) => { e.preventDefault(); onSalvar({ data, estatuetas, like, review }); }} className={styles.etapaLog}>
       <div className={styles.filmeInfo}>
         {detalhes?.poster_path ? (
-          <img src={getImageURL(detalhes.poster_path, "w185")} alt={filme.nome} className={styles.filmePoster} />
+          <img src={getImageURL(detalhes.poster_path, "w185")} alt={filme.titulo} className={styles.filmePoster} />
         ) : (
           <div className={styles.filmeSemPoster} />
         )}
         <div className={styles.filmeTexto}>
-          <h3 className={styles.filmeNome}>{filme.nome}</h3>
+          <h3 className={styles.filmeNome}>{filme.titulo}</h3>
           <span className={styles.filmeAno}>{filme.ano}</span>
           {detalhes?.overview && (
             <p className={styles.filmeSinopse}>{detalhes.overview.slice(0, 120)}...</p>

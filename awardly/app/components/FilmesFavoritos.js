@@ -5,19 +5,64 @@ import Parse from "@/lib/parseClient";
 import styles from "@/styles/filmesFavoritos.module.css";
 import { getFilme, getImageURL } from "@/lib/tmdb";
 
-async function buscarFilmes(termo) {
+async function buscarFilmesPorTitulo(termo) {
   if (!termo.trim()) return [];
   const Filme = Parse.Object.extend("Filme");
   const query = new Parse.Query(Filme);
-  query.contains("nome", termo);
+  query.matches("titulo", termo, "i"); // case-insensitive
   query.limit(8);
   const resultados = await query.find();
   return resultados.map((f) => ({
     objectId: f.id,
     tmdbId: f.get("tmdbId"),
-    nome: f.get("nome"),
+    titulo: f.get("titulo"),
     ano: f.get("ano"),
   }));
+}
+
+async function buscarFilmesPorTituloOriginal(termo) {
+  if (!termo.trim()) return [];
+  try {
+    const url = `https://api.themoviedb.org/3/search/movie?api_key=${process.env.NEXT_PUBLIC_TMDB_API_KEY}&query=${encodeURIComponent(termo)}&language=pt-BR`;
+    const res = await fetch(url);
+    const data = await res.json();
+    const tmdbIds = (data.results || []).slice(0, 10).map((m) => m.id);
+    if (tmdbIds.length === 0) return [];
+
+    const Filme = Parse.Object.extend("Filme");
+    const query = new Parse.Query(Filme);
+    query.containedIn("tmdbId", tmdbIds);
+    query.limit(8);
+    const resultados = await query.find();
+    return resultados.map((f) => ({
+      objectId: f.id,
+      tmdbId: f.get("tmdbId"),
+      titulo: f.get("titulo"),
+      ano: f.get("ano"),
+    }));
+  } catch {
+    return [];
+  }
+}
+
+async function buscarFilmes(termo) {
+  const [porTitulo, porOriginal] = await Promise.allSettled([
+    buscarFilmesPorTitulo(termo),
+    buscarFilmesPorTituloOriginal(termo),
+  ]);
+
+  const lista1 = porTitulo.status === "fulfilled" ? porTitulo.value : [];
+  const lista2 = porOriginal.status === "fulfilled" ? porOriginal.value : [];
+
+  const vistos = new Set();
+  const merged = [];
+  for (const f of [...lista1, ...lista2]) {
+    if (!vistos.has(f.objectId)) {
+      vistos.add(f.objectId);
+      merged.push(f);
+    }
+  }
+  return merged.slice(0, 8); // mantém o limite de 8
 }
 
 function Quadradinho({ filme, indice, onClick }) {
@@ -31,16 +76,16 @@ function Quadradinho({ filme, indice, onClick }) {
           {filme.poster_path ? (
             <img
               src={getImageURL(filme.poster_path, "w342")}
-              alt={filme.nome}
+              alt={filme.titulo}
               className={styles.quadradoImg}
             />
           ) : (
             <div className={styles.quadradoSemPoster}>
-              <span>{filme.nome}</span>
+              <span>{filme.titulo}</span>
             </div>
           )}
           <div className={styles.quadradoOverlay}>
-            <span className={styles.quadradoTitulo}>{filme.nome}</span>
+            <span className={styles.quadradoTitulo}>{filme.titulo}</span>
             <button
               className={styles.btnRemover}
               onClick={(e) => { e.stopPropagation(); onClick(true); }}
@@ -59,7 +104,7 @@ function Quadradinho({ filme, indice, onClick }) {
   );
 }
 
-function ModalBusca({ onSelecionar, onFechar }) {
+function ModalBusca({ onSelecionar, onFechar, valor }) {
   const [termo, setTermo] = useState("");
   const [resultados, setResultados] = useState([]);
   const [buscando, setBuscando] = useState(false);
@@ -106,19 +151,22 @@ function ModalBusca({ onSelecionar, onFechar }) {
           {!buscando && termo && resultados.length === 0 && (
             <p className={styles.semResultado}>Nenhum filme encontrado.</p>
           )}
-          {resultados.map((filme) => (
-            <div
-              key={filme.objectId}
-              className={styles.resultadoItem}
-              onClick={() => onSelecionar(filme)}
-            >
-              <div className={styles.resultadoInfo}>
-                <span className={styles.resultadoNome}>{filme.nome}</span>
-                <span className={styles.resultadoAno}>{filme.ano}</span>
+          {resultados.map((filme) => {
+            const duplicado = valor.some((v) => v.tmdbId === filme.tmdbId);
+            return (
+              <div
+                key={filme.objectId}
+                className={`${styles.resultadoItem} ${duplicado ? styles.resultadoDesabilitado : ""}`}
+                onClick={() => !duplicado && onSelecionar(filme)}
+              >
+                <div className={styles.resultadoInfo}>
+                  <span className={styles.resultadoNome}>{filme.titulo}</span>
+                  <span className={styles.resultadoAno}>{filme.ano}</span>
+                </div>
+                <span className={styles.resultadoAdd}>{duplicado ? "✓" : "+"}</span>
               </div>
-              <span className={styles.resultadoAdd}>+</span>
-            </div>
-          ))}
+            );
+          })}
         </div>
       </div>
     </div>
@@ -137,6 +185,11 @@ export default function FilmesFavoritos({ valor = [], onChange }) {
   }
 
   async function handleSelecionar(filme) {
+    const jaExiste = slots.some(
+      (s, i) => s?.tmdbId === filme.tmdbId && i !== indiceEditando
+    );
+    if (jaExiste) return;
+
     let poster_path = null;
     try {
       const detalhes = await getFilme(filme.tmdbId);
@@ -175,6 +228,7 @@ export default function FilmesFavoritos({ valor = [], onChange }) {
         <ModalBusca
           onSelecionar={handleSelecionar}
           onFechar={() => { setModalAberto(false); setIndiceEditando(null); }}
+          valor={valor}
         />
       )}
     </div>
