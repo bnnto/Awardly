@@ -7,6 +7,34 @@ import '@/styles/categorias.css';
 
 const ANOS = [2023, 2024, 2025, 2026];
 
+const ORDEM_CATEGORIAS = [
+  'Melhor Filme',
+  'Melhor Diretor',
+  'Melhor Ator',
+  'Melhor Atriz',
+  'Melhor Ator Coadjuvante',
+  'Melhor Atriz Coadjuvante',
+  'Melhor Roteiro Original',
+  'Melhor Roteiro Adaptado',
+  'Melhor Filme Internacional',
+  'Melhor Animação',
+  'Melhor Documentário (Longa)',
+  'Melhor Documentário (Curta)',
+  'Melhor Curta de Animação',
+  'Melhor Curta-Metragem (Live Action)',
+  'Melhor Fotografia',
+  'Melhor Edição',
+  'Melhor Montagem',
+  'Melhor Trilha Sonora',
+  'Melhor Canção Original',
+  'Melhor Design de Produção',
+  'Melhor Figurino',
+  'Melhor Maquiagem e Penteados',
+  'Melhor Som',
+  'Melhores Efeitos Visuais',
+  'Melhor Direção de Elenco',
+];
+
 export default function Categorias() {
   const [anoSelecionado, setAnoSelecionado] = useState(null);
   const { filmes, loading, erro } = useFilmes(anoSelecionado);
@@ -18,6 +46,16 @@ export default function Categorias() {
     });
     return acc;
   }, {});
+
+  const categoriasOrdenadas = ORDEM_CATEGORIAS
+    .filter((cat) => categoriasAgrupadas[cat])
+    .map((cat) => [cat, categoriasAgrupadas[cat]]);
+
+  // categorias que não estão na lista oficial aparecem no final
+  const categoriasExtras = Object.entries(categoriasAgrupadas)
+    .filter(([cat]) => !ORDEM_CATEGORIAS.includes(cat));
+
+  const todasCategorias = [...categoriasOrdenadas, ...categoriasExtras];
 
   return (
     <div className="categorias-container">
@@ -46,12 +84,12 @@ export default function Categorias() {
 
       {!loading && !erro && anoSelecionado && (
         <div className="categorias-lista">
-          {Object.entries(categoriasAgrupadas).map(([nome, filmesCategoria]) => (
+          {todasCategorias.map(([nome, filmesCategoria]) => (
             <div key={nome} className="categoria-bloco">
               <h2>{nome}</h2>
               <div className="categoria-filmes">
                 {filmesCategoria.map((filme) => (
-                  <FilmeCard key={filme.id} filme={filme} />
+                  <FilmeCard key={filme.id} filme={filme} categoriaAtual={nome} />
                 ))}
               </div>
             </div>

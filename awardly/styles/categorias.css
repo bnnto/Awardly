@@ -165,6 +165,13 @@
   letter-spacing: 0.06em;
 }
 
+.atorIndicado {
+  font-size: 12px;
+  color: var(--gold, #FFD000);
+  letter-spacing: 0.06em;
+  font-style: italic;
+}
+
 @keyframes subirFadeIn {
   from {
     opacity: 0;
