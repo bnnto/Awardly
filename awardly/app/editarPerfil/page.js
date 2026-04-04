@@ -3,6 +3,7 @@
 import { useEffect, useState, useRef } from "react";
 import Parse from "@/lib/parseClient";
 import NavbarLogin from "../components/NavbarLogin";
+import FilmesFavoritos from "../components/FilmesFavoritos";
 import { useRouter } from "next/navigation";
 import styles from "@/styles/editarPerfil.module.css";
 
@@ -14,20 +15,47 @@ export default function EditarPerfil() {
   const [form, setForm] = useState({ nome: "", bio: "", username: "" });
   const [fotoPreview, setFotoPreview] = useState(null);
   const [fotoFile, setFotoFile] = useState(null);
+  const [favoritos, setFavoritos] = useState([]); 
   const [salvando, setSalvando] = useState(false);
   const [mensagem, setMensagem] = useState({ texto: "", tipo: "" });
 
   useEffect(() => {
-    const user = Parse.User.current();
-    if (!user) { router.push("/login"); return; }
-    setUsuario(user);
-    setForm({
-      nome: user.get("nome") || "",
-      bio: user.get("bio") || "",
-      username: user.get("username") || "",
-    });
-    const foto = user.get("foto");
-    if (foto?._url) setFotoPreview(foto._url);
+    async function carregar() {
+      const user = Parse.User.current();
+      if (!user) { router.push("/login"); return; }
+      setUsuario(user);
+      setForm({
+        nome: user.get("nome") || "",
+        bio: user.get("bio") || "",
+        username: user.get("username") || "",
+      });
+      const foto = user.get("foto");
+      if (foto?._url) setFotoPreview(foto._url);
+
+      const tmdbIds = user.get("favoritos") || [];
+      if (tmdbIds.length > 0) {
+        try {
+          const Filme = Parse.Object.extend("Filme");
+          const query = new Parse.Query(Filme);
+          query.containedIn("tmdbId", tmdbIds);
+          const resultados = await query.find();
+          const ordenados = tmdbIds
+            .map((id) => resultados.find((f) => f.get("tmdbId") === id))
+            .filter(Boolean)
+            .map((f) => ({
+              objectId: f.id,
+              tmdbId: f.get("tmdbId"),
+              nome: f.get("nome"),
+              ano: f.get("ano"),
+              poster_path: f.get("poster") || null,
+            }));
+          setFavoritos(ordenados);
+        } catch (e) {
+          console.error("Erro ao carregar favoritos:", e);
+        }
+      }
+    }
+    carregar();
   }, []);
 
   function handleChange(e) {
@@ -51,6 +79,8 @@ export default function EditarPerfil() {
       if (form.nome !== usuario.get("nome")) usuario.set("nome", form.nome);
       if (form.bio !== usuario.get("bio")) usuario.set("bio", form.bio);
       if (form.username !== usuario.get("username")) usuario.set("username", form.username);
+
+      usuario.set("favoritos", favoritos.map((f) => f.tmdbId));
 
       if (fotoFile) {
         const parseFile = new Parse.File(
@@ -149,10 +179,21 @@ export default function EditarPerfil() {
                 onChange={handleChange}
                 placeholder="Fale um pouco sobre você..."
                 className={styles.textarea}
-                maxLength={160}
+                maxLength={100}
                 rows={3}
               />
-              <span className={styles.contador}>{form.bio.length}/160</span>
+              <span className={styles.contador}>{form.bio.length}/100</span>
+            </div>
+          </div>
+
+          <div className={styles.campos}>
+            <div className={styles.campo}>
+              <label className={styles.label}>filmes favoritos</label>
+              <p className={styles.sublabel}>escolha até 4 filmes do Oscar</p>
+              <FilmesFavoritos
+                valor={favoritos}
+                onChange={setFavoritos}
+              />
             </div>
           </div>
 

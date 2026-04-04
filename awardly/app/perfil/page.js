@@ -5,18 +5,11 @@ import Parse from "@/lib/parseClient";
 import NavbarLogin from "../components/NavbarLogin";
 import TabsPerfil from "../components/TabsPerfil";
 import styles from "@/styles/perfil.module.css";
-import { getImageURL } from "@/lib/tmdb";
+import { getFilme, getImageURL } from "@/lib/tmdb";
 import { useRouter } from "next/navigation";
 
-const FILMES_FAVORITOS = [
-  { id: 1064213, poster_path: "/aosm8NMQ3UyoBVpSxyimorCQykC.jpg", title: "Ainda Estou Aqui" },
-  { id: 1054867, poster_path: "/kYgQkdIfHqhvRtQKGSxaJiRJZfg.jpg", title: "Uma Batalha Após a Outra" },
-  { id: 693134, poster_path: "/imdb9bHewgU2RmkRmCxe2y0O4Ij.jpg", title: "Duna: Parte Dois" },
-  { id: 974576, poster_path: "/xgGGinKRL8xeRdjpvkzKorrvkNO.jpg", title: "O Aprendiz" },
-];
-
 const ATIVIDADE_RECENTE = [
-  { tipo: "review", filme: "Ainda Estou Aqui", nota: 9.2, texto: "Uma obra devastadora e necessária.", data: "2 dias atrás" },
+  { tipo: "review", filme: "Ainda Estou Aqui", nota: 9.2, data: "2 dias atrás" },
   { tipo: "watchlist", filme: "O Brutalista", data: "5 dias atrás" },
   { tipo: "avaliacao", filme: "Duna: Parte Dois", nota: 8.5, data: "1 semana atrás" },
   { tipo: "seguindo", usuario: "maria_cinefila", data: "1 semana atrás" },
@@ -55,33 +48,32 @@ function EstatCard({ valor, label }) {
 function FilmeFavorito({ filme }) {
   return (
     <div className={styles.filmeFav}>
-      <img
-        src={getImageURL(filme.poster_path, "w342")}
-        alt={filme.title}
-        className={styles.filmeFavImg}
-      />
+      {filme.poster_path ? (
+        <img
+          src={getImageURL(filme.poster_path, "w342")}
+          alt={filme.title || filme.nome}
+          className={styles.filmeFavImg}
+        />
+      ) : (
+        <div className={styles.filmeFavSemPoster}>
+          <span>{filme.title || filme.nome}</span>
+        </div>
+      )}
       <div className={styles.filmeFavOverlay}>
-        <span className={styles.filmeFavTitulo}>{filme.title}</span>
+        <span className={styles.filmeFavTitulo}>{filme.title || filme.nome}</span>
       </div>
     </div>
   );
 }
 
 function AtividadeItem({ item }) {
-  const icones = {
-    review: "✍️",
-    watchlist: "🎬",
-    avaliacao: "⭐",
-    seguindo: "👤",
-  };
-
+  const icones = { review: "✍️", watchlist: "🎬", avaliacao: "⭐", seguindo: "👤" };
   const textos = {
     review: `avaliou "${item.filme}" com ${item.nota}`,
     watchlist: `adicionou "${item.filme}" à watchlist`,
     avaliacao: `deu nota ${item.nota} para "${item.filme}"`,
     seguindo: `começou a seguir ${item.usuario}`,
   };
-
   return (
     <div className={styles.atividadeItem}>
       <span className={styles.atividadeIcone}>{icones[item.tipo]}</span>
@@ -96,19 +88,13 @@ function AtividadeItem({ item }) {
 function ReviewCard({ review }) {
   return (
     <div className={styles.reviewCard}>
-      <img
-        src={getImageURL(review.poster, "w185")}
-        alt={review.filme}
-        className={styles.reviewPoster}
-      />
+      <img src={getImageURL(review.poster, "w185")} alt={review.filme} className={styles.reviewPoster} />
       <div className={styles.reviewBody}>
         <div className={styles.reviewHeader}>
           <span className={styles.reviewFilme}>{review.filme}</span>
           <span className={styles.reviewNota}>{review.nota}</span>
         </div>
-        <span className={styles.reviewCategoria}>
-          Oscar {review.ano} · {review.categoria}
-        </span>
+        <span className={styles.reviewCategoria}>Oscar {review.ano} · {review.categoria}</span>
         <p className={styles.reviewTexto}>{review.texto}</p>
         <span className={styles.reviewData}>{review.data}</span>
       </div>
@@ -120,6 +106,7 @@ export default function Perfil() {
   const [usuario, setUsuario] = useState(null);
   const [seguidores, setSeguidores] = useState(0);
   const [seguindo, setSeguindo] = useState(0);
+  const [filmesFavoritos, setFilmesFavoritos] = useState([]);
   const [carregando, setCarregando] = useState(true);
   const router = useRouter();
 
@@ -130,15 +117,24 @@ export default function Perfil() {
         if (user) {
           setUsuario(user);
 
-          const qSeguidores = new Parse.Query("Follow");
-          qSeguidores.equalTo("seguindo", user);
-          const totalSeguidores = await qSeguidores.count();
-          setSeguidores(totalSeguidores);
+          const qSeg = new Parse.Query("Follow");
+          qSeg.equalTo("seguindo", user);
+          setSeguidores(await qSeg.count());
 
           const qSeguindo = new Parse.Query("Follow");
           qSeguindo.equalTo("seguidor", user);
-          const totalSeguindo = await qSeguindo.count();
-          setSeguindo(totalSeguindo);
+          setSeguindo(await qSeguindo.count());
+
+          const tmdbIds = user.get("favoritos") || [];
+          if (tmdbIds.length > 0) {
+            const resultados = await Promise.allSettled(
+              tmdbIds.map((id) => getFilme(id))
+            );
+            const filmes = resultados
+              .filter((r) => r.status === "fulfilled" && r.value)
+              .map((r) => r.value);
+            setFilmesFavoritos(filmes);
+          }
         }
       } catch (e) {
         console.error(e);
@@ -173,9 +169,7 @@ export default function Perfil() {
             {foto ? (
               <img src={foto} alt={nome} className={styles.avatar} />
             ) : (
-              <div className={styles.avatarPlaceholder}>
-                {nome[0]?.toUpperCase()}
-              </div>
+              <div className={styles.avatarPlaceholder}>{nome[0]?.toUpperCase()}</div>
             )}
           </div>
           <div className={styles.headerInfo}>
@@ -202,11 +196,15 @@ export default function Perfil() {
         <div className={styles.colunaEsq}>
           <section className={styles.secao}>
             <h2 className={styles.tituloSecao}>filmes favoritos</h2>
-            <div className={styles.gradeFilmesFav}>
-              {FILMES_FAVORITOS.map((f) => (
-                <FilmeFavorito key={f.id} filme={f} />
-              ))}
-            </div>
+            {filmesFavoritos.length > 0 ? (
+              <div className={styles.gradeFilmesFav}>
+                {filmesFavoritos.map((f) => (
+                  <FilmeFavorito key={f.id} filme={f} />
+                ))}
+              </div>
+            ) : (
+              <p className={styles.vazio}>Nenhum filme favorito ainda.</p>
+            )}
           </section>
 
           <section className={styles.secao}>
