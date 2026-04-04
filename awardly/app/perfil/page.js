@@ -6,6 +6,7 @@ import NavbarLogin from "../components/NavbarLogin";
 import TabsPerfil from "../components/TabsPerfil";
 import styles from "@/styles/perfil.module.css";
 import { getImageURL } from "@/lib/tmdb";
+import { useRouter } from "next/navigation";
 
 const FILMES_FAVORITOS = [
   { id: 1064213, poster_path: "/aosm8NMQ3UyoBVpSxyimorCQykC.jpg", title: "Ainda Estou Aqui" },
@@ -120,6 +121,7 @@ export default function Perfil() {
   const [seguidores, setSeguidores] = useState(0);
   const [seguindo, setSeguindo] = useState(0);
   const [carregando, setCarregando] = useState(true);
+  const router = useRouter();
 
   useEffect(() => {
     async function carregar() {
@@ -180,7 +182,9 @@ export default function Perfil() {
             <h1 className={styles.nomeUsuario}>{nome}</h1>
             <p className={styles.bioUsuario}>{bio}</p>
           </div>
-          <button className={styles.btnEditar}>Editar perfil</button>
+          <button className={styles.btnEditar} onClick={() => router.push("/editarPerfil")}>
+            Editar perfil
+          </button>
         </div>
       </div>
 

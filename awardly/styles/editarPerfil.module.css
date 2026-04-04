@@ -1,0 +1,302 @@
+.principal {
+  padding: 0;
+  max-width: 100%;
+  margin: 0;
+  min-height: 100vh;
+  background: var(--bg);
+}
+
+.pagina {
+  max-width: 560px;
+  margin: 0 auto;
+  padding: 48px 24px 80px;
+}
+
+/* ── Cabeçalho ── */
+
+.cabecalho {
+  margin-bottom: 40px;
+}
+
+.btnVoltar {
+  background: none;
+  border: none;
+  color: rgba(255, 255, 255, 0.35);
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 13px;
+  letter-spacing: 0.08em;
+  cursor: pointer;
+  padding: 0;
+  margin-bottom: 16px;
+  transition: color 0.2s ease;
+}
+
+.btnVoltar:hover {
+  color: var(--gold);
+}
+
+.titulo {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 32px;
+  font-weight: 300;
+  font-style: italic;
+  color: var(--text);
+  letter-spacing: 0.01em;
+}
+
+/* ── Formulário ── */
+
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 36px;
+}
+
+/* ── Foto ── */
+
+.secaoFoto {
+  display: flex;
+  justify-content: center;
+}
+
+.avatarWrap {
+  position: relative;
+  width: 110px;
+  height: 110px;
+  border-radius: 50%;
+  cursor: pointer;
+  overflow: hidden;
+  border: 2px solid var(--gold);
+  box-shadow: 0 0 24px rgba(201, 168, 76, 0.2);
+  transition: box-shadow 0.3s ease;
+}
+
+.avatarWrap:hover {
+  box-shadow: 0 0 32px rgba(201, 168, 76, 0.4);
+}
+
+.avatar {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.avatarPlaceholder {
+  width: 100%;
+  height: 100%;
+  background: var(--card-bg);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 42px;
+  font-weight: 600;
+  color: var(--gold);
+}
+
+.avatarOverlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.6);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  transition: opacity 0.25s ease;
+}
+
+.avatarWrap:hover .avatarOverlay {
+  opacity: 1;
+}
+
+.avatarOverlay span {
+  font-size: 11px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--gold);
+}
+
+/* ── Campos ── */
+
+.campos {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.campo {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.label {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 13px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.4);
+}
+
+.input {
+  width: 100%;
+  background: var(--card-bg);
+  border: 1px solid var(--border);
+  border-radius: 2px;
+  padding: 12px 14px;
+  font-size: 14px;
+  color: var(--text);
+  outline: none;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+  font-family: inherit;
+  box-sizing: border-box;
+}
+
+.input:focus {
+  border-color: var(--gold);
+  box-shadow: 0 0 0 1px rgba(201, 168, 76, 0.2);
+}
+
+.input::placeholder {
+  color: rgba(255, 255, 255, 0.2);
+}
+
+.inputPrefix {
+  display: flex;
+  align-items: center;
+  background: var(--card-bg);
+  border: 1px solid var(--border);
+  border-radius: 2px;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.inputPrefix:focus-within {
+  border-color: var(--gold);
+  box-shadow: 0 0 0 1px rgba(201, 168, 76, 0.2);
+}
+
+.prefix {
+  padding: 12px 4px 12px 14px;
+  color: var(--gold);
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 15px;
+  font-weight: 500;
+  user-select: none;
+}
+
+.inputComPrefix {
+  border: none;
+  box-shadow: none;
+  flex: 1;
+  padding-left: 4px;
+}
+
+.inputComPrefix:focus {
+  border: none;
+  box-shadow: none;
+}
+
+.textarea {
+  width: 100%;
+  background: var(--card-bg);
+  border: 1px solid var(--border);
+  border-radius: 2px;
+  padding: 12px 14px;
+  font-size: 14px;
+  color: var(--text);
+  outline: none;
+  resize: none;
+  line-height: 1.6;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+  font-family: inherit;
+  box-sizing: border-box;
+}
+
+.textarea:focus {
+  border-color: var(--gold);
+  box-shadow: 0 0 0 1px rgba(201, 168, 76, 0.2);
+}
+
+.textarea::placeholder {
+  color: rgba(255, 255, 255, 0.2);
+}
+
+.contador {
+  font-size: 11px;
+  color: rgba(255, 255, 255, 0.25);
+  text-align: right;
+  margin-top: -4px;
+}
+
+/* ── Mensagem ── */
+
+.mensagem {
+  font-size: 13px;
+  text-align: center;
+  padding: 10px;
+  border-radius: 2px;
+}
+
+.sucesso {
+  color: #7dcea0;
+  background: rgba(125, 206, 160, 0.08);
+  border: 1px solid rgba(125, 206, 160, 0.2);
+}
+
+.erro {
+  color: #e07b7b;
+  background: rgba(224, 123, 123, 0.08);
+  border: 1px solid rgba(224, 123, 123, 0.2);
+}
+
+/* ── Ações ── */
+
+.acoes {
+  display: flex;
+  gap: 12px;
+  justify-content: flex-end;
+}
+
+.btnCancelar {
+  padding: 10px 24px;
+  background: transparent;
+  border: 1px solid var(--border);
+  border-radius: 2px;
+  color: rgba(255, 255, 255, 0.4);
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 13px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: border-color 0.2s ease, color 0.2s ease;
+}
+
+.btnCancelar:hover {
+  border-color: rgba(255, 255, 255, 0.3);
+  color: var(--text);
+}
+
+.btnSalvar {
+  padding: 10px 28px;
+  background: var(--gold);
+  border: none;
+  border-radius: 2px;
+  color: #0a0906;
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: opacity 0.2s ease, transform 0.2s ease;
+}
+
+.btnSalvar:hover:not(:disabled) {
+  opacity: 0.88;
+  transform: translateY(-1px);
+}
+
+.btnSalvar:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}

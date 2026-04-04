@@ -9,6 +9,7 @@ import DarkVeil from "../components/DarkVeil";
 export default function Cadastro() {
   const [form, setForm] = useState({ username: "", email: "", password: "" });
   const [message, setMessage] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
   const router = useRouter();
 
   function handleChange(e) {
@@ -52,13 +53,28 @@ export default function Cadastro() {
             value={form.email}
             onChange={handleChange}
           />
-          <input
-            type="password"
-            name="password"
-            placeholder="Senha"
-            value={form.password}
-            onChange={handleChange}
-          />
+          <div className={styles.senha}>
+            <input
+              type={showPassword ? "text" : "password"}
+              name="password"
+              placeholder="Senha"
+              value={form.password}
+              onChange={handleChange}
+            />
+            <button
+              type="button"
+              className={styles.botaoOlho}
+              onClick={() => setShowPassword(v => !v)}
+              tabIndex={-1}
+            >
+              <img
+                src={showPassword ? "/olho-aberto.png" : "/olho-fechado.png"}
+                alt={showPassword ? "Ocultar senha" : "Mostrar senha"}
+                width={20}
+                height={20}
+              />
+            </button>
+          </div>
           <button type="submit" className={styles.btnPrimary}>Cadastrar</button>
         </form>
 
