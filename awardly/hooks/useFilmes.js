@@ -29,27 +29,38 @@ export function useFilmes(ano = null) {
               getFilmeCreditos(tmdbId),
             ]);
 
-            // Filtra todos os diretores, pega apenas os nomes e junta com vírgula
             const diretoresTMDB = creditos.crew
               ?.filter((p) => p.job === 'Director')
               .map((p) => p.name)
               .join(', ') || null;
 
+            const JOBS_ROTEIRISTA = ['Screenplay', 'Story', 'Writer', 'Original Story', 'Idea'];
+
+            const roteiristas = creditos.crew
+              ?.filter((p) => JOBS_ROTEIRISTA.includes(p.job))
+              .map((p) => p.name)
+              // remove duplicatas (mesma pessoa com dois jobs)
+              .filter((nome, i, arr) => arr.indexOf(nome) === i)
+              .join(', ') || null;
+
             return {
-              id:              filme.id,
+              id:                 filme.id,
               tmdbId,
-              tituloOriginal:  detalhes.original_title,
-              sinopse:         detalhes.overview,
-              poster:          getImageURL(detalhes.poster_path, 'w342'),
-              backdrop:        getImageURL(detalhes.backdrop_path, 'w780'),
-              anoLancamento:   detalhes.release_date?.split('-')[0],
-              nota:            detalhes.vote_average?.toFixed(1),
-              duracao:         detalhes.runtime,
-              categorias:      filme.get('categorias')      || [],
-              vencedores:      filme.get('vencedores')      || [],
-              atoresIndicados: filme.get('atoresIndicados') || {},
-              diretor:         diretoresTMDB,
-              titulo:          filme.get('titulo')          || detalhes.title,
+              tituloOriginal:     detalhes.original_title,
+              sinopse:            detalhes.overview,
+              poster:             getImageURL(detalhes.poster_path, 'w342'),
+              backdrop:           getImageURL(detalhes.backdrop_path, 'w780'),
+              anoLancamento:      detalhes.release_date?.split('-')[0],
+              nota:               detalhes.vote_average?.toFixed(1),
+              duracao:            detalhes.runtime,
+              categorias:         filme.get('categorias')         || [],
+              vencedores:         filme.get('vencedores')         || [],
+              atoresIndicados:    filme.get('atoresIndicados')    || {},
+              // { 'Melhor Canção Original': ['All Too Well', 'Carolina'] }
+              cancao:   filme.get('cancao')   || {},
+              diretor:            diretoresTMDB,
+              roteiristas,
+              titulo:             filme.get('titulo')             || detalhes.title,
             };
           })
         );
