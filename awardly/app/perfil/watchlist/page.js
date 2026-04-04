@@ -6,11 +6,13 @@ import NavbarLogin from "../../components/NavbarLogin";
 import TabsPerfil from "../../components/TabsPerfil";
 import styles from "@/styles/perfil.module.css";
 import { getFilme, getImageURL } from "@/lib/tmdb";
+import { useRouter } from "next/navigation";
 
 export default function PerfilWatchlist() {
   const [itens, setItens] = useState([]);
   const [carregando, setCarregando] = useState(true);
   const [usuario, setUsuario] = useState(null);
+  const router = useRouter();
 
   useEffect(() => {
     async function carregar() {
@@ -29,7 +31,6 @@ export default function PerfilWatchlist() {
             const filme = await getFilme(r.get("filmeId"));
             return {
               filme,
-              oscarAno: r.get("oscarAno"),
               parseId: r.id,
             };
           })
@@ -37,7 +38,7 @@ export default function PerfilWatchlist() {
 
         setItens(
           comDetalhes
-            .filter((r) => r.status === "fulfilled")
+            .filter((r) => r.status === "fulfilled" && r.value.filme)
             .map((r) => r.value)
         );
       } catch (e) {
@@ -49,7 +50,7 @@ export default function PerfilWatchlist() {
     carregar();
   }, []);
 
-  async function removerDaWatchlist(parseId) {
+  async function remover(parseId) {
     try {
       const query = new Parse.Query("Watchlist");
       const obj = await query.get(parseId);
@@ -62,13 +63,18 @@ export default function PerfilWatchlist() {
 
   const nome = usuario?.get("nome") || usuario?.get("username") || "Usuário";
   const foto = usuario?.get("foto")?._url || null;
+  const bannerUrl = usuario?.get("banner")?._url || null;
 
   return (
     <main className={styles.principal}>
       <NavbarLogin usuario={{ nome, foto }} />
 
       <div className={styles.bannerWrap}>
-        <div className={styles.banner} />
+        {bannerUrl ? (
+          <img src={bannerUrl} alt="Banner" className={styles.bannerImg} />
+        ) : (
+          <div className={styles.banner} />
+        )}
         <div className={styles.headerPerfil}>
           <div className={styles.avatarWrap}>
             {foto ? (
@@ -80,16 +86,19 @@ export default function PerfilWatchlist() {
           <div className={styles.headerInfo}>
             <h1 className={styles.nomeUsuario}>{nome}</h1>
           </div>
-          <button className={styles.btnEditar}>Editar perfil</button>
+          <button className={styles.btnEditar} onClick={() => router.push("/editarPerfil")}>
+            Editar perfil
+          </button>
         </div>
       </div>
 
       <TabsPerfil />
 
       <div className={styles.conteudoFull}>
-        <h2 className={styles.tituloSecao} style={{ marginBottom: 24 }}>
-          watchlist
-        </h2>
+        <div className={styles.conteudoFullHeader}>
+          <h2 className={styles.tituloSecao}>watchlist</h2>
+          {!carregando && <span className={styles.conteudoCount}>{itens.length} filmes</span>}
+        </div>
 
         {carregando ? (
           <div className={styles.gradeFilmesAval}>
@@ -98,19 +107,26 @@ export default function PerfilWatchlist() {
             ))}
           </div>
         ) : itens.length === 0 ? (
-          <p className={styles.vazio}>Sua watchlist está vazia.</p>
+          <div className={styles.vazioWrap}>
+            <p className={styles.vazio}>Sua watchlist está vazia.</p>
+            <p className={styles.vazioDica}>Adicione filmes pela página de cada filme.</p>
+          </div>
         ) : (
           <div className={styles.gradeFilmesAval}>
-            {itens.map(({ filme, oscarAno, parseId }) => (
-              <div key={filme.id} className={styles.cardFilmeAval}>
-                <div className={styles.cardFilmeAvalImg}>
+            {itens.map(({ filme, parseId }) => (
+              <div key={parseId} className={styles.cardFilmeAval}>
+                <div
+                  className={styles.cardFilmeAvalImg}
+                  onClick={() => router.push(`/filmes/${filme.id}`)}
+                  style={{ cursor: "pointer" }}
+                >
                   <img
                     src={getImageURL(filme.poster_path, "w342")}
                     alt={filme.title}
                   />
                   <button
                     className={styles.btnRemoverWatch}
-                    onClick={() => removerDaWatchlist(parseId)}
+                    onClick={(e) => { e.stopPropagation(); remover(parseId); }}
                     title="Remover da watchlist"
                   >
                     ✕
@@ -118,7 +134,9 @@ export default function PerfilWatchlist() {
                 </div>
                 <div className={styles.cardFilmeAvalInfo}>
                   <p className={styles.cardFilmeAvalTitulo}>{filme.title}</p>
-                  <span className={styles.cardFilmeAvalAno}>Oscar {oscarAno}</span>
+                  <span className={styles.cardFilmeAvalAno}>
+                    {filme.release_date?.slice(0, 4)}
+                  </span>
                 </div>
               </div>
             ))}

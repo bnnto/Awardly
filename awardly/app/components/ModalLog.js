@@ -30,15 +30,13 @@ function Estatuetas({ valor, onChange }) {
 
   function handleMouseMove(e, indice) {
     const rect = e.currentTarget.getBoundingClientRect();
-    const x = e.clientX - rect.left;
-    const metade = x < rect.width / 2;
+    const metade = (e.clientX - rect.left) < rect.width / 2;
     setHover(calcularValor(indice, metade));
   }
 
   function handleClick(e, indice) {
     const rect = e.currentTarget.getBoundingClientRect();
-    const x = e.clientX - rect.left;
-    const metade = x < rect.width / 2;
+    const metade = (e.clientX - rect.left) < rect.width / 2;
     const novo = calcularValor(indice, metade);
     onChange(valor === novo ? 0 : novo);
   }
@@ -58,21 +56,19 @@ function Estatuetas({ valor, onChange }) {
             onClick={(e) => handleClick(e, i)}
           >
             {cheia ? (
-              <img src="/oscar2.png" alt={`${i} estatuetas`} className={styles.estatuetaImg} />
+              <img src="/oscar2.png" alt="" className={styles.estatuetaImg} />
             ) : meia ? (
               <div className={styles.estatuetaMeia}>
-                <img src="/oscar2.png" alt="meia estatueta" className={styles.estatuetaImg} style={{ clipPath: "inset(0 50% 0 0)" }} />
-                <img src="/oscarvazio.png" alt="" className={`${styles.estatuetaImg} ${styles.estatuetaFundo}`} style={{ clipPath: "inset(0 0 0 50%)" }} />
+                <img src="/oscar2.png" className={styles.estatuetaImg} style={{ clipPath: "inset(0 50% 0 0)" }} />
+                <img src="/oscarvazio.png" className={`${styles.estatuetaImg} ${styles.estatuetaFundo}`} style={{ clipPath: "inset(0 0 0 50%)" }} />
               </div>
             ) : (
-              <img src="/oscarvazio.png" alt="vazia" className={styles.estatuetaImg} />
+              <img src="/oscarvazio.png" alt="" className={styles.estatuetaImg} />
             )}
           </div>
         );
       })}
-      {valor > 0 && (
-        <span className={styles.estatuetasValor}>{valor}</span>
-      )}
+      {valor > 0 && <span className={styles.estatuetasValor}>{valor}</span>}
     </div>
   );
 }
@@ -83,11 +79,10 @@ function BotaoLike({ ativo, onChange }) {
       type="button"
       className={`${styles.btnLike} ${ativo ? styles.btnLikeAtivo : ""}`}
       onClick={() => onChange(!ativo)}
-      title={ativo ? "Remover like" : "Gostei"}
     >
       <img
         src={ativo ? "/envelopecoracao.png" : "/envelope.png"}
-        alt={ativo ? "Gostei" : "Não gostei"}
+        alt={ativo ? "Gostei" : "Gostei?"}
         className={styles.envelopeImg}
       />
       <span>{ativo ? "gostei" : "gostei?"}</span>
@@ -136,21 +131,14 @@ function EtapaBusca({ onSelecionar }) {
           className={styles.inputBusca}
         />
       </div>
-
       <div className={styles.resultados}>
         {buscando && <p className={styles.msg}>buscando...</p>}
         {!buscando && termo && resultados.length === 0 && (
           <p className={styles.msg}>Nenhum filme encontrado.</p>
         )}
-        {!termo && (
-          <p className={styles.msgDica}>Digite o nome de um filme indicado ao Oscar.</p>
-        )}
+        {!termo && <p className={styles.msgDica}>Digite o nome de um filme indicado ao Oscar.</p>}
         {resultados.map((filme) => (
-          <div
-            key={filme.objectId}
-            className={styles.resultadoItem}
-            onClick={() => onSelecionar(filme)}
-          >
+          <div key={filme.objectId} className={styles.resultadoItem} onClick={() => onSelecionar(filme)}>
             <div className={styles.resultadoInfo}>
               <span className={styles.resultadoNome}>{filme.nome}</span>
               <span className={styles.resultadoAno}>{filme.ano}</span>
@@ -170,20 +158,11 @@ function EtapaLog({ filme, detalhes, onSalvar, salvando, erro }) {
   const [like, setLike] = useState(false);
   const [review, setReview] = useState("");
 
-  function handleSubmit(e) {
-    e.preventDefault();
-    onSalvar({ data, estatuetas, like, review });
-  }
-
   return (
-    <form onSubmit={handleSubmit} className={styles.etapaLog}>
+    <form onSubmit={(e) => { e.preventDefault(); onSalvar({ data, estatuetas, like, review }); }} className={styles.etapaLog}>
       <div className={styles.filmeInfo}>
         {detalhes?.poster_path ? (
-          <img
-            src={getImageURL(detalhes.poster_path, "w185")}
-            alt={filme.nome}
-            className={styles.filmePoster}
-          />
+          <img src={getImageURL(detalhes.poster_path, "w185")} alt={filme.nome} className={styles.filmePoster} />
         ) : (
           <div className={styles.filmeSemPoster} />
         )}
@@ -191,9 +170,7 @@ function EtapaLog({ filme, detalhes, onSalvar, salvando, erro }) {
           <h3 className={styles.filmeNome}>{filme.nome}</h3>
           <span className={styles.filmeAno}>{filme.ano}</span>
           {detalhes?.overview && (
-            <p className={styles.filmeSinopse}>
-              {detalhes.overview.slice(0, 120)}...
-            </p>
+            <p className={styles.filmeSinopse}>{detalhes.overview.slice(0, 120)}...</p>
           )}
         </div>
       </div>
@@ -242,12 +219,20 @@ function EtapaLog({ filme, detalhes, onSalvar, salvando, erro }) {
   );
 }
 
-export default function ModalLog({ onFechar, onSalvo }) {
-  const [etapa, setEtapa] = useState("busca");
-  const [filmeSelecionado, setFilmeSelecionado] = useState(null);
+export default function ModalLog({ onFechar, onSalvo, filmePreSelecionado = null }) {
+  const [etapa, setEtapa] = useState(filmePreSelecionado ? "log" : "busca");
+  const [filmeSelecionado, setFilmeSelecionado] = useState(filmePreSelecionado);
   const [detalhesFilme, setDetalhesFilme] = useState(null);
   const [salvando, setSalvando] = useState(false);
   const [erro, setErro] = useState("");
+
+  useEffect(() => {
+    if (filmePreSelecionado?.tmdbId) {
+      getFilme(filmePreSelecionado.tmdbId)
+        .then(setDetalhesFilme)
+        .catch(console.error);
+    }
+  }, []);
 
   async function handleSelecionar(filme) {
     setFilmeSelecionado(filme);
@@ -256,7 +241,7 @@ export default function ModalLog({ onFechar, onSalvo }) {
       const detalhes = await getFilme(filme.tmdbId);
       setDetalhesFilme(detalhes);
     } catch (e) {
-      console.error("Erro ao buscar detalhes:", e);
+      console.error(e);
     }
   }
 
@@ -296,7 +281,7 @@ export default function ModalLog({ onFechar, onSalvo }) {
       <div className={styles.modal}>
         <div className={styles.header}>
           <div className={styles.headerEsq}>
-            {etapa === "log" && (
+            {etapa === "log" && !filmePreSelecionado && (
               <button className={styles.btnVoltar} onClick={() => { setEtapa("busca"); setFilmeSelecionado(null); setDetalhesFilme(null); }}>
                 ←
               </button>
