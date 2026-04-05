@@ -60,6 +60,7 @@ export default function Categorias() {
   useEffect(() => {
     const user = Parse.User.current();
     setUsuario(user);
+    window.scrollTo(0, 0);
   }, []);
 
   useEffect(() => {

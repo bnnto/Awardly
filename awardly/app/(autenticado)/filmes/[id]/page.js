@@ -3,7 +3,7 @@
 import { useState, useEffect, useRef, use } from 'react';
 import { useRouter } from 'next/navigation';
 import Parse from '@/lib/parseClient';
-import { getFilme, getFilmeCreditos, getFilmeImagens, getImageURL } from '../../../../lib/tmdb';
+import { getFilme, getFilmeCreditos, getFilmeImagens, getImageURL } from '@/lib/tmdb';
 import '@/styles/filmeUnico.css';
 
 async function verificarWatchlist(tmdbId) {
@@ -203,6 +203,10 @@ export default function FilmeUnico({ params }) {
   const [imagemAberta, setImagemAberta] = useState(null);
 
   useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
+
+  useEffect(() => {
     async function carregar() {
       try {
         const user = Parse.User.current();
@@ -222,6 +226,18 @@ export default function FilmeUnico({ params }) {
         const trailerYT = videos.results?.find((v) => v.type === 'Trailer' && v.site === 'YouTube')
           || videos.results?.find((v) => v.site === 'YouTube');
 
+        const diretores = creditos.crew
+          ?.filter((p) => p.job === 'Director')
+          .map((p) => p.name)
+          .join(', ') || null;
+
+        const JOBS_ROTEIRISTA = ['Screenplay', 'Story', 'Writer', 'Original Story', 'Idea'];
+        const roteiristas = creditos.crew
+          ?.filter((p) => JOBS_ROTEIRISTA.includes(p.job))
+          .map((p) => p.name)
+          .filter((nome, i, arr) => arr.indexOf(nome) === i)
+          .join(', ') || null;
+
         setFilme({
           titulo: detalhes.title,
           tituloOriginal: detalhes.original_title,
@@ -233,9 +249,11 @@ export default function FilmeUnico({ params }) {
           nota: detalhes.vote_average?.toFixed(1),
           generos: detalhes.genres?.map((g) => g.name),
           tmdbId: detalhes.id,
+          diretor: diretores,
+          roteiristas,
         });
 
-        setElenco(creditos.cast?.slice(0, 20) || []);
+        setElenco(creditos.cast?.filter((a) => a.profile_path).slice(0, 20) || []);
         setTrailer(trailerYT?.key || null);
         setClassificacao(classificacaoBR || 'N/A');
         setImagens(imgs.backdrops?.slice(0, 20) || []);
@@ -290,6 +308,20 @@ export default function FilmeUnico({ params }) {
               <p>{filme.ano} • {filme.duracao} • ⭐ {filme.nota} • {classificacao}</p>
               <div className="generos">
                 {filme.generos?.map((g) => <span key={g} className="tag">{g}</span>)}
+              </div>
+              <div className="filme-creditos">
+                {filme.diretor && (
+                  <p className="filme-credito-item">
+                    <span className="filme-credito-label">Direção</span>
+                    {filme.diretor}
+                  </p>
+                )}
+                {filme.roteiristas && (
+                  <p className="filme-credito-item">
+                    <span className="filme-credito-label">Roteiro</span>
+                    {filme.roteiristas}
+                  </p>
+                )}
               </div>
               <div className="acoes">
                 <button onClick={() => setLogAberto(!logAberto)} className={logAberto ? 'btn-ativo' : ''}>

@@ -45,7 +45,6 @@
   letter-spacing: 0.01em;
 }
 
-/* Meta */
 .ator-meta {
   display: flex;
   flex-wrap: wrap;
@@ -96,12 +95,22 @@
 }
 
 /* Biografia */
-.ator-bio p {
+.ator-bio-texto {
   font-family: 'Poppins', sans-serif;
   font-size: 14px;
   line-height: 1.8;
   color: rgba(255,255,255,0.65);
   max-width: 720px;
+  overflow: hidden;
+  transition: max-height 0.4s ease;
+}
+
+.ator-bio-texto--recolhida {
+  max-height: 120px;
+}
+
+.ator-bio-texto--expandida {
+  max-height: 2000px;
 }
 
 .ator-bio-btn {
@@ -114,6 +123,7 @@
   padding: 8px 0 0;
   letter-spacing: 0.04em;
   transition: opacity 0.2s;
+  display: block;
 }
 
 .ator-bio-btn:hover {
@@ -200,6 +210,20 @@
   color: rgba(255,255,255,0.8);
 }
 
+.ator-badge-vencedor {
+  margin-left: auto;
+  font-family: 'Poppins', sans-serif;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: #0a0a0a;
+  background: var(--gold, #FFD000);
+  padding: 3px 8px;
+  border-radius: 2px;
+  flex-shrink: 0;
+}
+
 /* Filmes grid */
 .ator-filmes-grid {
   display: grid;
@@ -251,14 +275,7 @@
   color: #fff;
 }
 
-/* Loading */
-.ator-loading {
-  width: 100%;
-  height: 560px;
-  background: linear-gradient(135deg, #1a1814 0%, #232018 50%, #1a1814 100%);
-  animation: loadPulse 1.8s infinite;
-}
-
+/* Vazio */
 .ator-vazio {
   font-family: 'Poppins', sans-serif;
   font-size: 14px;
@@ -267,23 +284,12 @@
   padding: 16px 0;
 }
 
-.ator-indicacao-vencedor {
-  border-color: rgba(255,200,0,0.4) !important;
-  background: rgba(255,208,0,0.05);
-}
-
-.ator-badge-vencedor {
-  margin-left: auto;
-  font-family: 'Poppins', sans-serif;
-  font-size: 10px;
-  font-weight: 700;
-  letter-spacing: 0.15em;
-  text-transform: uppercase;
-  color: #0a0a0a;
-  background: var(--gold, #FFD000);
-  padding: 3px 8px;
-  border-radius: 2px;
-  flex-shrink: 0;
+/* Loading */
+.ator-loading {
+  width: 100%;
+  height: 560px;
+  background: linear-gradient(135deg, #1a1814 0%, #232018 50%, #1a1814 100%);
+  animation: loadPulse 1.8s infinite;
 }
 
 @keyframes loadPulse {

@@ -148,6 +148,30 @@
   max-width: 720px;
 }
 
+.filme-creditos {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.filme-credito-item {
+  font-family: 'Poppins', sans-serif;
+  font-size: 13px;
+  color: rgba(255,255,255,0.65);
+  display: flex;
+  gap: 8px;
+  align-items: baseline;
+}
+
+.filme-credito-label {
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: rgba(255,255,255,0.35);
+  white-space: nowrap;
+}
+
 /* Categorias Oscar */
 .categorias-oscar-lista {
   display: flex;

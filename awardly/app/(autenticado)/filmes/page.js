@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useEffect } from 'react';
 import { useFilmes } from '../../../hooks/useFilmes';
 import FilmeCard from '@/app/components/FilmeCard';
 import '@/styles/filmes.css';
@@ -21,6 +21,10 @@ export default function Filmes() {
         f.tituloOriginal?.toLowerCase().includes(termo)
     );
   }, [filmes, busca]);
+
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
 
   return (
     <div className="filmes-container">

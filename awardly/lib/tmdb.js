@@ -20,6 +20,7 @@ export const getFilmeCreditos = (id) => fetchTMDB(`/movie/${id}/credits`);
 export const getFilmeImagens  = (id) => fetchTMDB(`/movie/${id}/images`, {
     include_image_language: 'en,null',
 });
+export const getPessoaCreditos = (id) => fetchTMDB(`/person/${id}/movie_credits`);
 
 export const getPessoa = async (id) => {
   const ptBR = await fetchTMDB(`/person/${id}`);
