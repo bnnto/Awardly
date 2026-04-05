@@ -102,6 +102,7 @@
   opacity: 0;
   z-index: 2;
   transition: opacity 0.3s ease;
+  text-align: left;
 }
 
 .cardFilme:hover .sobreposicaoFilme {
