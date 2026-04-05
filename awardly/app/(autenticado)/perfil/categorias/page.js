@@ -1,13 +1,11 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, useMemo } from "react";
 import Parse from "@/lib/parseClient";
 import TabsPerfil from "@/app/components/TabsPerfil";
 import CardLogCategoria from "@/app/components/CardLogCategoria";
-import AtividadeItem from "@/app/components/AtividadeItem";
 import styles from "@/styles/perfil.module.css";
-import { useRouter } from "next/navigation";
-import pub from "@/styles/perfilPublico.module.css";
+import cat from "@/styles/categoriasPerfil.module.css";
 
 function tempoRelativo(date) {
   if (!date) return "";
@@ -22,50 +20,22 @@ function tempoRelativo(date) {
   return `${sem} semana${sem > 1 ? "s" : ""} atrás`;
 }
 
-function CardCategoria({ log }) {
-  return (
-    <div className={styles.cardLogCategoria}>
-      <div className={styles.cardLogCatHeader}>
-        <span className={styles.cardLogCatCategoria}>{log.categoria}</span>
-        <span className={styles.cardLogCatAno}>{log.ano}</span>
-      </div>
-      <div className={styles.cardLogCatBody}>
-        {log.vencedorReal && (
-          <div className={styles.cardLogCatLinha}>
-            <span className={styles.cardLogCatLabel}>venceu</span>
-            <span className={styles.cardLogCatValor}>{log.vencedorReal}</span>
-          </div>
-        )}
-        {log.deveriaTerGanhado && (
-          <div className={styles.cardLogCatLinha}>
-            <span className={styles.cardLogCatLabel}>deveria ter ganhado</span>
-            <span className={styles.cardLogCatValor}>{log.deveriaTerGanhado}</span>
-          </div>
-        )}
-        {log.queriaQueGanhasse && (
-          <div className={styles.cardLogCatLinha}>
-            <span className={styles.cardLogCatLabel}>queria que ganhasse</span>
-            <span className={styles.cardLogCatValor}>{log.queriaQueGanhasse}</span>
-          </div>
-        )}
-        {log.review && (
-          <p className={styles.cardLogCatReview}>{log.review}</p>
-        )}
-      </div>
-      <span className={styles.cardLogCatData}>{log.data}</span>
-    </div>
-  );
-}
-
 export default function PerfilCategorias() {
   const [logs, setLogs] = useState([]);
   const [carregando, setCarregando] = useState(true);
+  const [anoSelecionado, setAnoSelecionado] = useState(null);
   const [usuario, setUsuario] = useState(null);
-  const router = useRouter();
+
+  const fotoObj = usuario?.get("foto");
+  const foto = (typeof fotoObj?.url === "function" ? fotoObj.url() : fotoObj?._url) || null;
+  const bannerObj = usuario?.get("banner");
+  const bannerUrl = (typeof bannerObj?.url === "function" ? bannerObj.url() : bannerObj?._url) || null;
+  const nome = usuario?.get("nome") || usuario?.get("username") || "";
 
   useEffect(() => {
     async function carregar() {
       const user = Parse.User.current();
+      await user.fetch();
       setUsuario(user);
       if (!user) { setCarregando(false); return; }
 
@@ -73,7 +43,7 @@ export default function PerfilCategorias() {
         const query = new Parse.Query("LogCategoria");
         query.equalTo("usuarioId", user);
         query.descending("createdAt");
-        query.limit(100);
+        query.limit(200);
         const resultados = await query.find();
         setLogs(resultados.map((l) => ({
           id: l.id,
@@ -94,11 +64,16 @@ export default function PerfilCategorias() {
     carregar();
   }, []);
 
-  const nome = usuario?.get("nome") || usuario?.get("username") || "Usuário";
-  const fotoObj = usuario?.get("foto");
-  const foto = (typeof fotoObj?.url === "function" ? fotoObj.url() : fotoObj?._url) || null;
-  const bannerObj = usuario?.get("banner");
-  const bannerUrl = (typeof bannerObj?.url === "function" ? bannerObj.url() : bannerObj?._url) || null;
+  // Anos disponíveis baseados nos logs reais
+  const anosDisponiveis = useMemo(() => {
+    const anos = [...new Set(logs.map((l) => l.ano).filter(Boolean))].sort((a, b) => b - a);
+    return anos;
+  }, [logs]);
+
+  const logsFiltrados = useMemo(() => {
+    if (!anoSelecionado) return logs;
+    return logs.filter((l) => l.ano === anoSelecionado);
+  }, [logs, anoSelecionado]);
 
   return (
     <main className={styles.principal}>
@@ -119,35 +94,68 @@ export default function PerfilCategorias() {
           <div className={styles.headerInfo}>
             <h1 className={styles.nomeUsuario}>{nome}</h1>
           </div>
-          <button className={styles.btnEditar} onClick={() => router.push("/editarPerfil")}>
-            Editar perfil
-          </button>
         </div>
       </div>
-
       <TabsPerfil />
 
       <div className={styles.conteudoFull}>
         <div className={styles.conteudoFullHeader}>
           <h2 className={styles.tituloSecao}>categorias avaliadas</h2>
-          {!carregando && <span className={styles.conteudoCount}>{logs.length} avaliações</span>}
+          {!carregando && (
+            <span className={styles.conteudoCount}>
+              {logsFiltrados.length} {logsFiltrados.length === 1 ? "avaliação" : "avaliações"}
+            </span>
+          )}
         </div>
 
-        {carregando ? (
-          <div className={styles.listaLogsCat}>
-            {Array.from({ length: 4 }).map((_, i) => (
-              <div key={i} className={styles.reviewCardEsq} />
+        {/* Filtro por ano */}
+        {!carregando && anosDisponiveis.length > 1 && (
+          <div className={cat.filtros}>
+            <button
+              className={`${cat.filtroBtnCat} ${anoSelecionado === null ? cat.filtroBtnAtivo : ""}`}
+              onClick={() => setAnoSelecionado(null)}
+            >
+              Todos
+            </button>
+            {anosDisponiveis.map((ano) => (
+              <button
+                key={ano}
+                className={`${cat.filtroBtnCat} ${anoSelecionado === ano ? cat.filtroBtnAtivo : ""}`}
+                onClick={() => setAnoSelecionado(ano)}
+              >
+                {ano}
+              </button>
             ))}
           </div>
-        ) : logs.length === 0 ? (
+        )}
+
+        {carregando ? (
+          <div className={cat.listaEsq}>
+            {Array.from({ length: 4 }).map((_, i) => (
+              <div key={i} className={cat.cardEsq} />
+            ))}
+          </div>
+        ) : logsFiltrados.length === 0 ? (
           <div className={styles.vazioWrap}>
-            <p className={styles.vazio}>Você ainda não avaliou nenhuma categoria.</p>
-            <p className={styles.vazioDica}>Acesse a página de categorias para começar.</p>
+            <p className={styles.vazio}>
+              {anoSelecionado
+                ? `Nenhuma categoria avaliada em ${anoSelecionado}.`
+                : "Você ainda não avaliou nenhuma categoria."}
+            </p>
+            {!anoSelecionado && (
+              <p className={styles.vazioDica}>Acesse a página de categorias para começar.</p>
+            )}
           </div>
         ) : (
-          <div className={styles.listaLogsCat}>
-            {logs.map((l) => (
-              <CardCategoria key={l.id} log={l} />
+          <div className={cat.lista}>
+            {logsFiltrados.map((l, index) => (
+              <div
+                key={l.id}
+                className={cat.cardAnimar}
+                style={{ animationDelay: `${Math.min(index * 60, 500)}ms` }}
+              >
+                <CardLogCategoria log={l} />
+              </div>
             ))}
           </div>
         )}

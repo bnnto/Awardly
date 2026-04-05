@@ -83,9 +83,6 @@ export default function PerfilWatchlist() {
           <div className={styles.headerInfo}>
             <h1 className={styles.nomeUsuario}>{nome}</h1>
           </div>
-          <button className={styles.btnEditar} onClick={() => router.push("/editarPerfil")}>
-            Editar perfil
-          </button>
         </div>
       </div>
 
