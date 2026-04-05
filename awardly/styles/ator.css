@@ -1,0 +1,333 @@
+.ator-unico {
+  min-height: 100vh;
+  background: var(--bg, #0a0a0a);
+  color: var(--text, #fff);
+  padding-bottom: 64px;
+}
+
+.ator-hero {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 56px 48px 48px;
+}
+
+.ator-hero-conteudo {
+  display: flex;
+  gap: 48px;
+  align-items: flex-start;
+}
+
+.ator-foto {
+  width: 220px;
+  min-width: 220px;
+  aspect-ratio: 2/3;
+  object-fit: cover;
+  border-radius: 4px;
+  border: 1px solid var(--border, rgba(255,200,0,0.2));
+  box-shadow: 0 8px 32px rgba(0,0,0,0.6);
+  flex-shrink: 0;
+}
+
+.ator-info {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  min-width: 0;
+}
+
+.ator-info h1 {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 42px;
+  font-weight: 300;
+  font-style: italic;
+  color: var(--text, #fff);
+  line-height: 1.1;
+  letter-spacing: 0.01em;
+}
+
+/* Meta */
+.ator-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px 40px;
+}
+
+.ator-meta-item {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.ator-meta-item--full {
+  width: 100%;
+}
+
+.ator-meta-label {
+  font-family: 'Poppins', sans-serif;
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: rgba(255,255,255,0.35);
+}
+
+.ator-meta-valor {
+  font-family: 'Poppins', sans-serif;
+  font-size: 14px;
+  color: rgba(255,255,255,0.85);
+}
+
+.ator-aliases {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 4px;
+}
+
+.ator-alias-tag {
+  border: 1px solid var(--border, rgba(255,200,0,0.3));
+  border-radius: 2px;
+  color: var(--gold, #FFD000);
+  font-family: 'Poppins', sans-serif;
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.08em;
+  padding: 4px 10px;
+}
+
+/* Biografia */
+.ator-bio p {
+  font-family: 'Poppins', sans-serif;
+  font-size: 14px;
+  line-height: 1.8;
+  color: rgba(255,255,255,0.65);
+  max-width: 720px;
+}
+
+.ator-bio-btn {
+  background: none;
+  border: none;
+  color: var(--gold, #FFD000);
+  font-family: 'Poppins', sans-serif;
+  font-size: 13px;
+  cursor: pointer;
+  padding: 8px 0 0;
+  letter-spacing: 0.04em;
+  transition: opacity 0.2s;
+}
+
+.ator-bio-btn:hover {
+  opacity: 0.75;
+}
+
+/* Seções */
+.ator-secao {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 48px 48px 0;
+}
+
+.ator-secao h2 {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 26px;
+  font-weight: 300;
+  font-style: italic;
+  color: var(--text, #fff);
+  margin-bottom: 20px;
+  letter-spacing: 0.01em;
+}
+
+.ator-secao h2::before {
+  content: '';
+  display: inline-block;
+  width: 24px;
+  height: 1px;
+  background: var(--gold, #FFD000);
+  margin-right: 12px;
+  vertical-align: middle;
+  opacity: 0.7;
+}
+
+/* Indicações */
+.ator-indicacoes {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.ator-indicacao-card {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 14px 16px;
+  border: 1px solid rgba(255,200,0,0.15);
+  border-radius: 4px;
+  cursor: pointer;
+  transition: border-color 0.2s, background 0.2s;
+}
+
+.ator-indicacao-card:hover {
+  border-color: var(--gold, #FFD000);
+  background: rgba(255,208,0,0.03);
+}
+
+.ator-indicacao-vencedor {
+  border-color: rgba(255,200,0,0.4) !important;
+  background: rgba(255,208,0,0.05);
+}
+
+.ator-indicacao-icone {
+  width: 28px;
+  height: 28px;
+  object-fit: contain;
+  filter: drop-shadow(0 2px 6px rgba(201,168,76,0.8));
+  flex-shrink: 0;
+}
+
+.ator-indicacao-categoria {
+  font-family: 'Poppins', sans-serif;
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--gold, #FFD000);
+  margin-bottom: 2px;
+}
+
+.ator-indicacao-filme {
+  font-family: 'Poppins', sans-serif;
+  font-size: 14px;
+  color: rgba(255,255,255,0.8);
+}
+
+/* Filmes grid */
+.ator-filmes-grid {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 14px;
+}
+
+.ator-filme-card {
+  position: relative;
+  border-radius: 4px;
+  overflow: hidden;
+  aspect-ratio: 2/3;
+  border: 1px solid var(--border, rgba(255,200,0,0.15));
+  cursor: pointer;
+  transition: transform 0.3s ease, border-color 0.3s ease;
+}
+
+.ator-filme-card:hover {
+  transform: translateY(-5px);
+  border-color: var(--gold, #FFD000);
+}
+
+.ator-filme-card img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.ator-filme-overlay {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  padding: 40px 12px 12px;
+  background: linear-gradient(to top, rgba(0,0,0,0.99) 0%, rgba(0,0,0,0.7) 50%, transparent 100%);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.ator-filme-card:hover .ator-filme-overlay {
+  opacity: 1;
+}
+
+.ator-filme-overlay p {
+  font-family: 'Poppins', sans-serif;
+  font-size: 13px;
+  font-weight: 600;
+  color: #fff;
+}
+
+/* Loading */
+.ator-loading {
+  width: 100%;
+  height: 560px;
+  background: linear-gradient(135deg, #1a1814 0%, #232018 50%, #1a1814 100%);
+  animation: loadPulse 1.8s infinite;
+}
+
+.ator-vazio {
+  font-family: 'Poppins', sans-serif;
+  font-size: 14px;
+  color: rgba(255,255,255,0.35);
+  font-style: italic;
+  padding: 16px 0;
+}
+
+.ator-indicacao-vencedor {
+  border-color: rgba(255,200,0,0.4) !important;
+  background: rgba(255,208,0,0.05);
+}
+
+.ator-badge-vencedor {
+  margin-left: auto;
+  font-family: 'Poppins', sans-serif;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: #0a0a0a;
+  background: var(--gold, #FFD000);
+  padding: 3px 8px;
+  border-radius: 2px;
+  flex-shrink: 0;
+}
+
+@keyframes loadPulse {
+  0%, 100% { opacity: 0.6; }
+  50% { opacity: 1; }
+}
+
+/* Responsividade */
+@media (max-width: 900px) {
+  .ator-hero { padding: 32px 24px; }
+
+  .ator-hero-conteudo {
+    flex-direction: column;
+    gap: 24px;
+  }
+
+  .ator-foto {
+    width: 160px;
+    min-width: 160px;
+  }
+
+  .ator-info h1 { font-size: 30px; }
+
+  .ator-secao { padding: 32px 24px 0; }
+
+  .ator-filmes-grid {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 10px;
+  }
+}
+
+@media (max-width: 560px) {
+  .ator-hero { padding: 24px 16px; }
+
+  .ator-foto {
+    width: 120px;
+    min-width: 120px;
+  }
+
+  .ator-info h1 { font-size: 24px; }
+
+  .ator-secao { padding: 24px 16px 0; }
+
+  .ator-filmes-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}

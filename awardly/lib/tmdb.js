@@ -21,7 +21,13 @@ export const getFilmeImagens  = (id) => fetchTMDB(`/movie/${id}/images`, {
     include_image_language: 'en,null',
 });
 
-export const getPessoa        = (id) => fetchTMDB(`/person/${id}`);
+export const getPessoa = async (id) => {
+  const ptBR = await fetchTMDB(`/person/${id}`);
+  if (ptBR.biography) return ptBR;
+  // fallback para inglês se não tiver biografia em pt-BR
+  const en = await fetchTMDB(`/person/${id}`, { language: 'en-US' });
+  return { ...ptBR, biography: en.biography };
+};
 
 // tamanhos úteis: w185, w342, w500, w780, original
 export const getImageURL = (path, tamanho = 'w500') => {
