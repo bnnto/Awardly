@@ -3,7 +3,7 @@
 import { useState, useEffect, use } from 'react';
 import { useRouter } from 'next/navigation';
 import Parse from '@/lib/parseClient';
-import { getPessoa, getImageURL } from '@/lib/tmdb';
+import { getPessoa, getPessoaCreditos, getImageURL } from '@/lib/tmdb';
 import '@/styles/ator.css';
 
 async function buscarFilmesOscarDoAtor(tmdbIdAtor) {
@@ -29,16 +29,16 @@ async function buscarFilmesOscarDoAtor(tmdbIdAtor) {
           const personagem = data.cast?.find((c) => c.id === Number(tmdbIdAtor))?.character || null;
           const job = data.crew?.find((c) => c.id === Number(tmdbIdAtor))?.job || null;
 
-            filmesDoAtor.push({
+          filmesDoAtor.push({
             tmdbId,
             titulo: f.get('titulo'),
             categorias: f.get('categorias') || [],
             vencedores: f.get('vencedores') || [],
             atoresIndicados: f.get('atoresIndicados') || {},
-            ano: f.get('ano'),  // ← adiciona essa linha
+            ano: f.get('ano'),
             personagem,
             job,
-            });
+          });
         }
       } catch {}
     })
@@ -80,9 +80,10 @@ export default function AtorUnico({ params }) {
   useEffect(() => {
     async function carregar() {
       try {
-        const [pessoa, filmes] = await Promise.all([
-          getPessoa(id),
-          buscarFilmesOscarDoAtor(id),
+        const [pessoa, filmes, creditos] = await Promise.all([
+            getPessoa(id),
+            buscarFilmesOscarDoAtor(id),
+            getPessoaCreditos(id),
         ]);
 
         setAtor({
@@ -94,32 +95,36 @@ export default function AtorUnico({ params }) {
           falecimento: pessoa.deathday,
           localNascimento: pessoa.place_of_birth,
           tambemConhecidoPor: pessoa.also_known_as || [],
-          creditado: pessoa.known_for_department,
+          creditadoEm: pessoa.known_for_department === 'Acting' ? 'Atuação'
+          : pessoa.known_for_department === 'Directing' ? 'Direção'
+          : pessoa.known_for_department === 'Writing' ? 'Roteiro'
+          : pessoa.known_for_department === 'Production' ? 'Produção'
+          : pessoa.known_for_department || null,
+          totalCreditos: (creditos.cast?.length || 0) + (creditos.crew?.length || 0),
         });
 
-        // Monta lista de indicações ao oscar deste ator
         const inds = [];
         filmes.forEach((filme) => {
-        Object.entries(filme.atoresIndicados).forEach(([cat, atores]) => {
+          Object.entries(filme.atoresIndicados).forEach(([cat, atores]) => {
             const lista = Array.isArray(atores) ? atores : [atores];
             lista.forEach((nomeAtor) => {
-            if (
+              if (
                 typeof nomeAtor === 'string' &&
                 nomeAtor.toLowerCase().includes(pessoa.name.toLowerCase().split(' ')[0])
-            ) {
+              ) {
                 const venceu = filme.vencedores?.some(
-                (v) => v === cat || v === `${cat}::${nomeAtor}`
+                  (v) => v === cat || v === `${cat}::${nomeAtor}`
                 );
                 inds.push({
-                categoria: cat,
-                filme: filme.titulo,
-                tmdbId: filme.tmdbId,
-                ano: filme.ano,      // ← adiciona o ano
-                venceu,
+                  categoria: cat,
+                  filme: filme.titulo,
+                  tmdbId: filme.tmdbId,
+                  ano: filme.ano,
+                  venceu,
                 });
-            }
+              }
             });
-        });
+          });
         });
 
         setIndicacoes(inds);
@@ -154,12 +159,12 @@ export default function AtorUnico({ params }) {
             <h1>{ator.nome}</h1>
 
             <div className="ator-meta">
-              {ator.creditado && (
+                {ator.creditadoEm && (
                 <div className="ator-meta-item">
-                  <span className="ator-meta-label">Creditado(a) em</span>
-                  <span className="ator-meta-valor">{ator.creditado}</span>
+                    <span className="ator-meta-label">Creditado(a) em</span>
+                    <span className="ator-meta-valor">{ator.totalCreditos} filmes</span>
                 </div>
-              )}
+                )}
               {ator.genero && (
                 <div className="ator-meta-item">
                   <span className="ator-meta-label">Gênero</span>
@@ -168,9 +173,7 @@ export default function AtorUnico({ params }) {
               )}
               {ator.nascimento && (
                 <div className="ator-meta-item">
-                  <span className="ator-meta-label">
-                    {ator.falecimento ? 'Nascimento' : 'Nascimento'}
-                  </span>
+                  <span className="ator-meta-label">Nascimento</span>
                   <span className="ator-meta-valor">
                     {formatarData(ator.nascimento)}
                     {idade !== null && !ator.falecimento && ` (${idade} anos)`}
@@ -206,10 +209,8 @@ export default function AtorUnico({ params }) {
 
             {ator.biografia && (
               <div className="ator-bio">
-                <p>
-                  {bioExpandida || !bioLonga
-                    ? ator.biografia
-                    : ator.biografia.slice(0, BIO_LIMITE) + '...'}
+                <p className={`ator-bio-texto ${bioExpandida ? 'ator-bio-texto--expandida' : 'ator-bio-texto--recolhida'}`}>
+                  {ator.biografia}
                 </p>
                 {bioLonga && (
                   <button
@@ -225,56 +226,52 @@ export default function AtorUnico({ params }) {
         </div>
       </div>
 
-      {indicacoes.length > 0 && (
-        <section className="ator-secao">
+      <section className="ator-secao">
         <h2>Indicações ao Oscar</h2>
         {indicacoes.length === 0 ? (
-            <p className="ator-vazio">O ator nunca foi indicado ao Oscar.</p>
+          <p className="ator-vazio">O ator nunca foi indicado ao Oscar.</p>
         ) : (
-            <div className="ator-indicacoes">
+          <div className="ator-indicacoes">
             {indicacoes.map((ind, i) => (
-                <div
+              <div
                 key={i}
                 className={`ator-indicacao-card ${ind.venceu ? 'ator-indicacao-vencedor' : ''}`}
                 onClick={() => router.push(`/filmes/${ind.tmdbId}`)}
-                >
+              >
                 {ind.venceu && (
-                    <img src="/oscar2.png" className="ator-indicacao-icone" alt="Vencedor" />
+                  <img src="/oscar2.png" className="ator-indicacao-icone" alt="Vencedor" />
                 )}
                 <div>
-                    <p className="ator-indicacao-categoria">{ind.categoria}{ind.ano && ` • ${ind.ano}`}</p>
-                    <p className="ator-indicacao-filme">{ind.filme}</p>
+                  <p className="ator-indicacao-categoria">{ind.categoria}{ind.ano && ` • ${ind.ano}`}</p>
+                  <p className="ator-indicacao-filme">{ind.filme}</p>
                 </div>
                 {ind.venceu && (
-                    <span className="ator-badge-vencedor">Vencedor</span>
+                  <span className="ator-badge-vencedor">Vencedor</span>
                 )}
-                </div>
+              </div>
             ))}
-            </div>
+          </div>
         )}
-        </section>
-      )}
+      </section>
 
-      {filmesOscar.length > 0 && (
-        <section className="ator-secao ator-secao--filmes">
+      <section className="ator-secao ator-secao--filmes">
         <h2>Filmes com Indicação ao Oscar</h2>
         {filmesOscar.length === 0 ? (
-            <p className="ator-vazio">O ator não participou de nenhum filme indicado ao Oscar.</p>
+          <p className="ator-vazio">O ator não participou de nenhum filme indicado ao Oscar.</p>
         ) : (
-            <div className="ator-filmes-grid">
+          <div className="ator-filmes-grid">
             {filmesOscar.map((filme) => (
-                <div
+              <div
                 key={filme.tmdbId}
                 className="ator-filme-card"
                 onClick={() => router.push(`/filmes/${filme.tmdbId}`)}
-                >
+              >
                 <FilmeCardSimples tmdbId={filme.tmdbId} titulo={filme.titulo} />
-                </div>
+              </div>
             ))}
-            </div>
+          </div>
         )}
-        </section>
-      )}
+      </section>
     </div>
   );
 }
