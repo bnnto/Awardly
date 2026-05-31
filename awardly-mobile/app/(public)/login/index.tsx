@@ -1,10 +1,12 @@
 import { useState } from 'react';
-import { View, Text, TextInput, TouchableOpacity, Alert, StyleSheet } from 'react-native';
+import { View, Text, TextInput, TouchableOpacity, StyleSheet } from 'react-native';
 import { useRouter } from 'expo-router';
 import Parse from '../../../lib/parseClient';
+import { useAuthStore } from '../../../store/authStore';
 
 export default function Login() {
   const router = useRouter();
+  const setUser = useAuthStore((state) => state.setUser);
   const [email, setEmail] = useState('');
   const [senha, setSenha] = useState('');
   const [error, setError] = useState('');
@@ -12,11 +14,11 @@ export default function Login() {
   async function handleLogin() {
     try {
       setError('');
-      await Parse.User.logIn(email, senha);
+      const user = await Parse.User.logIn(email, senha);
+      setUser(user);
       router.replace('/(autenticado)/(tabs)');
     } catch (e: any) {
       setError(e.message);
-      Alert.alert('Erro', e.message);
     }
   }
 
@@ -112,9 +114,12 @@ const styles = StyleSheet.create({
     fontSize: 15.2,
     width: '100%',
     fontFamily: 'Poppins-Regular',
+<<<<<<< HEAD
   },
   inputPlaceholder: {
     color: 'rgba(255, 255, 255, 0.35)',
+=======
+>>>>>>> 4f6cefca79fc0823bf67923353b024843d7d3a9a
   },
   btnPrimary: {
     backgroundColor: '#FFD000',
@@ -145,14 +150,6 @@ const styles = StyleSheet.create({
     color: '#FFD000',
     fontSize: 14,
     fontWeight: '600',
-  },
-  btnGhost: {
-    marginTop: 8,
-  },
-  btnGhostText: {
-    color: 'rgba(255, 255, 255, 0.5)',
-    fontSize: 13.6,
-    textAlign: 'center',
   },
   message: {
     color: '#DC143C',
