@@ -39,7 +39,6 @@ export default function FilmeCard({
   itemForcado,
   venceu = false,
 }: FilmeCardProps) {
-  console.log('CARD:', filme);
   const router = useRouter();
 
   const nomeItem = Array.isArray(itemForcado)
