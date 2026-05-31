@@ -7,15 +7,15 @@ const BASE_URL = process.env.EXPO_PUBLIC_TMDB_BASE_URL;
 const API_KEY  = process.env.EXPO_PUBLIC_TMDB_API_KEY;
 
 async function fetchTMDB(endpoint: string, params: Record<string, string> = {}) {
-  const url = new URL(`${BASE_URL}${endpoint}`);
-  url.searchParams.set('api_key', API_KEY!);
-  url.searchParams.set('language', 'pt-BR');
+  const queryParams = new URLSearchParams({
+    api_key: API_KEY!,
+    language: 'pt-BR',
+    ...params,
+  }).toString();
 
-  Object.entries(params).forEach(([key, val]) => {
-    url.searchParams.set(key, val);
-  });
+  const url = `${BASE_URL}${endpoint}?${queryParams}`;
 
-  const res = await fetch(url.toString());
+  const res = await fetch(url);
   if (!res.ok) throw new Error(`Erro TMDB: ${res.status}`);
   return res.json();
 }
