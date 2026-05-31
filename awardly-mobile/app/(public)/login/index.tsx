@@ -114,12 +114,9 @@ const styles = StyleSheet.create({
     fontSize: 15.2,
     width: '100%',
     fontFamily: 'Poppins-Regular',
-<<<<<<< HEAD
   },
   inputPlaceholder: {
     color: 'rgba(255, 255, 255, 0.35)',
-=======
->>>>>>> 4f6cefca79fc0823bf67923353b024843d7d3a9a
   },
   btnPrimary: {
     backgroundColor: '#FFD000',
