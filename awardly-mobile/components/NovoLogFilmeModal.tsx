@@ -172,17 +172,12 @@ export default function NovoLogFilmeModal({ filme, onClose }: Props) {
       novoLog.set('usuarioId', user);
       novoLog.set('filmeId', filme.tmdbId);
 
-      if (filme.objectId) {
-        const FilmePointer = Parse.Object.extend('Filme');
-        novoLog.set('filme', FilmePointer.createWithoutData(filme.objectId));
-      }
-
       novoLog.set('dataAssistido', new Date(data + 'T12:00:00'));
       novoLog.set('estatuetas', estatuetas);
       novoLog.set('like', like);
       if (review.trim()) novoLog.set('review', review.trim());
 
-      await novoLog.save();
+      await novoLog.save(); 
 
       setMensagem('Log criado com sucesso!');
       setTimeout(() => onClose('__salvo__'), 700);
