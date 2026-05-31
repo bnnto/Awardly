@@ -28,6 +28,9 @@ export default function Cadastro() {
 
   return (
     <View style={styles.page}>
+      <TouchableOpacity style={styles.btnVoltar} onPress={() => router.back()}>
+        <Text style={styles.btnVoltarText}>←</Text>
+      </TouchableOpacity>
       <View style={styles.container}>
         <Text style={styles.title}>Cadastro</Text>
 
@@ -125,7 +128,7 @@ const styles = StyleSheet.create({
     color: '#ffffff',
     fontSize: 15.2,
     width: '100%',
-    fontFamily: 'Poppins',
+    fontFamily: 'Poppins-Regular',
   },
   inputPlaceholder: {
     color: 'rgba(255, 255, 255, 0.35)',
@@ -184,5 +187,14 @@ const styles = StyleSheet.create({
   },
   inputWrapper: {
     gap: 4,
+  },
+  btnVoltar: {
+  position: 'absolute',
+  top: 56,
+  left: 24,
+  },
+  btnVoltarText: {
+    color: '#c9a84c',
+    fontSize: 24,
   },
 });

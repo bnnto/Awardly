@@ -29,9 +29,10 @@ const features = [
   },
 ];
 
+// As rotas de filmes e categorias agora são null
 const categorias = [
-  { nome: 'FILMES', desc: 'Acervo Completo', rota: '/filmes' },
-  { nome: 'CATEGORIAS', desc: 'Indicados & Vencedores', rota: '/categorias' },
+  { nome: 'FILMES', desc: 'Acervo Completo', rota: null },
+  { nome: 'CATEGORIAS', desc: 'Indicados & Vencedores', rota: null },
   { nome: 'COMUNIDADE', desc: 'Rede de Cinéfilos', rota: '/cadastro' },
 ];
 
@@ -69,7 +70,6 @@ export default function Home() {
         showsVerticalScrollIndicator={false}
         contentContainerStyle={styles.scrollContent}
       >
-        {/* HEADER */}
         <Animated.View style={[styles.header, { opacity: fadeHeader }]}>
           <View>
             <Text style={styles.logo}>Awardly</Text>
@@ -96,7 +96,6 @@ export default function Home() {
 
         <View style={styles.divider} />
 
-        {/* HERO */}
         <Animated.View
           style={[styles.hero, { opacity: fadeHero, transform: [{ translateY: slideHero }] }]}
         >
@@ -126,7 +125,6 @@ export default function Home() {
           </TouchableOpacity>
         </Animated.View>
 
-        {/* FEATURES */}
         <Animated.View style={[styles.section, { opacity: fadeFeatures }]}>
           <Text style={styles.sectionLabel}>RECURSOS</Text>
           {features.map((f, i) => (
@@ -140,28 +138,44 @@ export default function Home() {
           ))}
         </Animated.View>
 
-        {/* CATEGORIAS */}
         <Animated.View style={[styles.section, { opacity: fadeCategorias }]}>
           <Text style={styles.sectionLabel}>EXPLORAR</Text>
-          {categorias.map((cat, i) => (
-            <TouchableOpacity
-              key={i}
-              style={styles.catCard}
-              onPress={() => router.push(cat.rota as any)}
-              activeOpacity={0.75}
-            >
-              <View style={styles.catCardInner}>
-                <View>
-                  <Text style={styles.catTag}>{cat.nome}</Text>
-                  <Text style={styles.catDesc}>{cat.desc}</Text>
+          {categorias.map((cat, i) => {
+            // Se tiver rota definida, funciona normalmente com o clique
+            if (cat.rota) {
+              return (
+                <TouchableOpacity
+                  key={i}
+                  style={styles.catCard}
+                  onPress={() => router.push(cat.rota as any)}
+                  activeOpacity={0.75}
+                >
+                  <View style={styles.catCardInner}>
+                    <View>
+                      <Text style={styles.catTag}>{cat.nome}</Text>
+                      <Text style={styles.catDesc}>{cat.desc}</Text>
+                    </View>
+                    <Text style={styles.catArrow}>→</Text>
+                  </View>
+                </TouchableOpacity>
+              );
+            }
+
+            // Se a rota for null, renderiza a View estática perfeita, sem blur e sem clique
+            return (
+              <View key={i} style={styles.catCard}>
+                <View style={styles.catCardInner}>
+                  <View>
+                    <Text style={styles.catTag}>{cat.nome}</Text>
+                    <Text style={styles.catDesc}>{cat.desc}</Text>
+                  </View>
+                  <Text style={styles.catArrow}>→</Text>
                 </View>
-                <Text style={styles.catArrow}>→</Text>
               </View>
-            </TouchableOpacity>
-          ))}
+            );
+          })}
         </Animated.View>
 
-        {/* FOOTER */}
         <View style={styles.footer}>
           <Text style={styles.footerLogo}>Awardly</Text>
           <Text style={styles.footerText}>
@@ -176,7 +190,7 @@ export default function Home() {
               <Text style={styles.footerLink}>Cadastrar</Text>
             </TouchableOpacity>
           </View>
-          <Text style={styles.footerCopy}>© 2025 Awardly</Text>
+          <Text style={styles.footerCopy}>© 2026 Awardly</Text>
         </View>
       </ScrollView>
     </View>
@@ -191,8 +205,6 @@ const styles = StyleSheet.create({
   scrollContent: {
     paddingBottom: 40,
   },
-
-  // HEADER
   header: {
     flexDirection: 'row',
     justifyContent: 'space-between',
@@ -202,10 +214,10 @@ const styles = StyleSheet.create({
     paddingBottom: 24,
   },
   logo: {
-    fontSize: 28,
-    fontWeight: '900',
+    fontSize: 33,
+    fontWeight: '600',
     color: '#e8e4da',
-    fontFamily: 'CormorantGaramond-Regular',
+    fontFamily: 'CormorantGaramond-MediumItalic',
     letterSpacing: 0.5,
   },
   logoSub: {
@@ -244,23 +256,19 @@ const styles = StyleSheet.create({
     fontFamily: 'Poppins-Bold',
     letterSpacing: 1,
   },
-
-  // DIVISOR
   divider: {
     height: 1,
     backgroundColor: 'rgba(201, 168, 76, 0.15)',
     marginHorizontal: 24,
     marginBottom: 40,
   },
-
-  // HERO
   hero: {
     paddingHorizontal: 24,
     marginBottom: 56,
   },
   heroTitle: {
     fontSize: 32,
-    fontFamily: 'CormorantGaramond-Regular',
+    fontFamily: 'CormorantGaramond-MediumItalic',
     color: '#ffffff',
     lineHeight: 38,
     letterSpacing: -0.5,
@@ -268,7 +276,7 @@ const styles = StyleSheet.create({
   },
   heroHighlight: {
     color: '#c9a84c',
-    fontFamily: 'CormorantGaramond-Regular',
+    fontFamily: 'CormorantGaramond-MediumItalic',
   },
   heroDesc: {
     color: '#7a7568',
@@ -292,8 +300,6 @@ const styles = StyleSheet.create({
     fontFamily: 'Poppins-Bold',
     letterSpacing: 2,
   },
-
-  // SEÇÕES
   section: {
     paddingHorizontal: 24,
     marginBottom: 48,
@@ -305,8 +311,6 @@ const styles = StyleSheet.create({
     letterSpacing: 4,
     marginBottom: 20,
   },
-
-  // FEATURES
   featureCard: {
     flexDirection: 'row',
     marginBottom: 20,
@@ -334,8 +338,6 @@ const styles = StyleSheet.create({
     lineHeight: 20,
     fontFamily: 'Poppins-Regular',
   },
-
-  // CATEGORIAS
   catCard: {
     backgroundColor: 'rgba(255,255,255,0.02)',
     borderWidth: 1,
@@ -366,8 +368,6 @@ const styles = StyleSheet.create({
     color: '#c9a84c',
     fontSize: 20,
   },
-
-  // FOOTER
   footer: {
     paddingHorizontal: 24,
     paddingTop: 32,

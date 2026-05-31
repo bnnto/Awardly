@@ -11,7 +11,7 @@ export default function RootLayout() {
     'CormorantGaramond-Light':        require('../assets/fonts/CormorantGaramond-Light.ttf'),
     'CormorantGaramond-LightItalic':  require('../assets/fonts/CormorantGaramond-LightItalic.ttf'),
     'CormorantGaramond-Regular':      require('../assets/fonts/CormorantGaramond-Regular.ttf'),
-    'CormorantGaramond-MediumItalic':  require('../assets/fonts/CormorantGaramond-MediumItalic.ttf'),
+    'CormorantGaramond-MediumItalic': require('../assets/fonts/CormorantGaramond-MediumItalic.ttf'),
     'Poppins-Regular':                require('../assets/fonts/Poppins-Regular.ttf'),
     'Poppins-Medium':                 require('../assets/fonts/Poppins-Medium.ttf'),
     'Poppins-SemiBold':               require('../assets/fonts/Poppins-SemiBold.ttf'),
@@ -22,13 +22,7 @@ export default function RootLayout() {
     if (loaded || error) {
       SplashScreen.hideAsync();
     }
-    const timeout = setTimeout(() => SplashScreen.hideAsync(), 3000);
-    return () => clearTimeout(timeout);
   }, [loaded, error]);
-
-  if (!loaded && !error) {
-    return null;
-  }
 
   return (
     <Stack
