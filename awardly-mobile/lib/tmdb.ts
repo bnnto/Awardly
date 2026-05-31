@@ -1,20 +1,14 @@
-// lib/tmdb.ts
-// Praticamente idêntico ao original. Duas mudanças:
-// 1. NEXT_PUBLIC_ → EXPO_PUBLIC_
-// 2. getImageURL: fallback local em vez de '/placeholder.jpg'
-
-const BASE_URL = process.env.EXPO_PUBLIC_TMDB_BASE_URL;
-const API_KEY  = process.env.EXPO_PUBLIC_TMDB_API_KEY;
+const BASE_URL = process.env.EXPO_PUBLIC_TMDB_BASE_URL ?? 'https://api.themoviedb.org/3';
+const API_KEY  = process.env.EXPO_PUBLIC_TMDB_API_KEY ?? '';
 
 async function fetchTMDB(endpoint: string, params: Record<string, string> = {}) {
   const queryParams = new URLSearchParams({
-    api_key: API_KEY!,
+    api_key: API_KEY,
     language: 'pt-BR',
     ...params,
   }).toString();
 
   const url = `${BASE_URL}${endpoint}?${queryParams}`;
-
   const res = await fetch(url);
   if (!res.ok) throw new Error(`Erro TMDB: ${res.status}`);
   return res.json();
@@ -30,19 +24,12 @@ export const getPessoaCreditos = (id: string | number) => fetchTMDB(`/person/${i
 export const getPessoa = async (id: string | number) => {
   const ptBR = await fetchTMDB(`/person/${id}`);
   if (ptBR.biography) return ptBR;
-  // Fallback para inglês se não houver biografia em pt-BR
   const en = await fetchTMDB(`/person/${id}`, { language: 'en-US' });
   return { ...ptBR, biography: en.biography };
 };
 
-// Tamanhos úteis: w185, w342, w500, w780, original
-// No RN não existe '/placeholder.jpg' — usamos require() local
 export const getImageURL = (path: string | null | undefined, tamanho = 'w500'): string | null => {
-  if (!path) return null; // componentes tratam null mostrando placeholder local
-  return `${process.env.EXPO_PUBLIC_TMDB_IMAGE_BASE}/${tamanho}${path}`;
+  if (!path) return null;
+  const base = process.env.EXPO_PUBLIC_TMDB_IMAGE_BASE ?? 'https://image.tmdb.org/t/p';
+  return `${base}/${tamanho}${path}`;
 };
-
-// No .env:
-//   EXPO_PUBLIC_TMDB_BASE_URL=https://api.themoviedb.org/3
-//   EXPO_PUBLIC_TMDB_API_KEY=sua_chave
-//   EXPO_PUBLIC_TMDB_IMAGE_BASE=https://image.tmdb.org/t/p
