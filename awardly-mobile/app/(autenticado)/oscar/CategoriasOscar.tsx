@@ -47,6 +47,7 @@ interface Secao {
 export default function CategoriasOscar() {
   const [anoSelecionado, setAnoSelecionado] = useState<number | null>(null);
   const { filmes, loading, erro } = useFilmes(anoSelecionado);
+  console.log('FILMES:', filmes);
   const [usuario, setUsuario] = useState<any>(null);
   const [modalAberto, setModalAberto] = useState<{ categoria: string; filmes: FilmeComMeta[] } | null>(null);
   const [logsFeitos, setLogsFeitos] = useState<Set<string>>(new Set());
@@ -138,6 +139,7 @@ export default function CategoriasOscar() {
 
     return [...ordenadas, ...extras];
   }, [filmes]);
+  console.log('SECOES:', secoes);
 
   function handleAbrirModal(cat: string, filmesCategoria: FilmeComMeta[]) {
     if (!usuario) return;
