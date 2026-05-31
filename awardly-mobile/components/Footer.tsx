@@ -21,7 +21,7 @@ export default function Footer() {
         >
           TMDB API
         </Text>
-        {' '}bt is not endorsed or certified by TMDB.
+        {' '}but is not endorsed or certified by TMDB.
       </Text>
     </View>
   );
