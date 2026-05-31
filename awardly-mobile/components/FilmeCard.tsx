@@ -107,13 +107,11 @@ const styles = StyleSheet.create({
   poster: {
     width: '100%',
     height: '100%',
-    position: 'absolute',
   },
   posterPlaceholder: {
     width: '100%',
     height: '100%',
     backgroundColor: colors.surface,
-    position: 'absolute',
   },
   overlay: {
     position: 'absolute',
